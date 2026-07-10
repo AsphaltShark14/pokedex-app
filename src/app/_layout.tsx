@@ -11,7 +11,7 @@ import { tamaguiConfig } from '../../tamagui.config';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+const RootLayout = () => {
   const { theme } = useAppTheme();
 
   return (
@@ -33,4 +33,6 @@ export default function RootLayout() {
       </QueryClientProvider>
     </GestureHandlerRootView>
   );
-}
+};
+
+export default RootLayout;

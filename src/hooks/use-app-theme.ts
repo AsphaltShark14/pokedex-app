@@ -1,7 +1,7 @@
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useThemeStore } from '@/stores/use-theme-store';
 
-export function useAppTheme() {
+export const useAppTheme = () => {
   const systemScheme = useColorScheme();
   const themeOverride = useThemeStore((state) => state.themeOverride);
   const setThemeOverride = useThemeStore((state) => state.setThemeOverride);
@@ -11,4 +11,4 @@ export function useAppTheme() {
   const toggleTheme = () => setThemeOverride(theme === 'dark' ? 'light' : 'dark');
 
   return { theme, toggleTheme };
-}
+};

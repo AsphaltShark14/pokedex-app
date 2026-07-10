@@ -8,7 +8,7 @@ import { ThemedView } from './themed-view';
 import { Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 
-export function WebBadge() {
+export const WebBadge = () => {
   const { theme } = useAppTheme();
 
   return (
@@ -26,7 +26,7 @@ export function WebBadge() {
       />
     </ThemedView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

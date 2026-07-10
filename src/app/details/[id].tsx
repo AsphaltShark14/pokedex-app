@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { H2, Paragraph, YStack } from 'tamagui';
 
-export default function DetailsScreen() {
+const DetailsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   return (
@@ -10,4 +10,6 @@ export default function DetailsScreen() {
       <Paragraph>Showing details for id: {id}</Paragraph>
     </YStack>
   );
-}
+};
+
+export default DetailsScreen;

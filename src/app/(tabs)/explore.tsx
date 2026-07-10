@@ -11,7 +11,7 @@ import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
-export default function TabTwoScreen() {
+const TabTwoScreen = () => {
   const safeAreaInsets = useSafeAreaInsets();
   const insets = {
     ...safeAreaInsets,
@@ -124,7 +124,9 @@ export default function TabTwoScreen() {
       </ThemedView>
     </ScrollView>
   );
-}
+};
+
+export default TabTwoScreen;
 
 const styles = StyleSheet.create({
   scrollView: {
