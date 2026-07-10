@@ -76,7 +76,7 @@ const DetailsScreen = () => {
 
   return (
     <YStack flex={1} style={{ backgroundColor: heroColor }}>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }} edges={['top']}>
         <XStack p="$3">
           <Pressable onPress={() => router.back()} hitSlop={12}>
             <SymbolView
