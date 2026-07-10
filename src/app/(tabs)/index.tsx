@@ -5,18 +5,16 @@ import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
 import { usePokemonList } from '@/api/use-pokemon-list';
 import type { PokemonListItem } from '@/api/pokemon';
-
-const POKEDEX_RED = '#DC0A2D';
-const POKEDEX_CREAM = '#FFF6E5';
+import { PokedexBrand } from '@/constants/theme';
 
 const HomeScreen = () => {
   const router = useRouter();
   const { data, isLoading, isError } = usePokemonList();
 
   return (
-    <YStack flex={1} bg={POKEDEX_CREAM}>
+    <YStack flex={1} bg={PokedexBrand.cream}>
       <SafeAreaView style={{ flex: 1 }}>
-        <YStack bg={POKEDEX_RED} p="$4" items="center">
+        <YStack bg={PokedexBrand.red} p="$4" items="center">
           <Text style={{ fontFamily: 'PressStart2P_400Regular' }} color="white" fontSize={18}>
             Pokédex
           </Text>
@@ -24,7 +22,7 @@ const HomeScreen = () => {
 
         {isLoading ? (
           <YStack flex={1} items="center" justify="center">
-            <ActivityIndicator color={POKEDEX_RED} />
+            <ActivityIndicator color={PokedexBrand.red} />
           </YStack>
         ) : isError ? (
           <YStack flex={1} items="center" justify="center" p="$4">
@@ -46,7 +44,7 @@ const HomeScreen = () => {
                     gap="$3"
                     opacity={pressed ? 0.7 : 1}
                   >
-                    <Text fontWeight="bold" color={POKEDEX_RED}>
+                    <Text fontWeight="bold" color={PokedexBrand.red}>
                       No. {String(item.id).padStart(3, '0')}
                     </Text>
                     <Text textTransform="capitalize">{item.name}</Text>
