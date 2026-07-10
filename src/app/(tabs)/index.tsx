@@ -1,113 +1,64 @@
-import * as Device from 'expo-device';
 import { useRouter } from 'expo-router';
-import { Platform, StyleSheet } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, XStack } from 'tamagui';
+import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { usePokemonList } from '@/api/use-pokemon-list';
+import type { PokemonListItem } from '@/api/pokemon';
 
-const getDevMenuHint = () => {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-};
+const POKEDEX_RED = '#DC0A2D';
+const POKEDEX_CREAM = '#FFF6E5';
 
 const HomeScreen = () => {
   const router = useRouter();
+  const { data, isLoading, isError } = usePokemonList();
 
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <YStack flex={1} bg={POKEDEX_CREAM}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <YStack bg={POKEDEX_RED} p="$4" items="center">
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} color="white" fontSize={18}>
+            Pokédex
+          </Text>
+        </YStack>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+        {isLoading ? (
+          <YStack flex={1} items="center" justify="center">
+            <ActivityIndicator color={POKEDEX_RED} />
+          </YStack>
+        ) : isError ? (
+          <YStack flex={1} items="center" justify="center" p="$4">
+            <Paragraph>Couldn&apos;t load Pokémon. Please try again shortly.</Paragraph>
+          </YStack>
+        ) : (
+          <FlatList<PokemonListItem>
+            data={data}
+            keyExtractor={(item) => String(item.id)}
+            contentContainerStyle={{ padding: 16, gap: 12 }}
+            renderItem={({ item }) => (
+              <Pressable onPress={() => router.push(`/details/${item.id}`)}>
+                {({ pressed }) => (
+                  <XStack
+                    bg="white"
+                    rounded="$4"
+                    p="$3"
+                    items="center"
+                    gap="$3"
+                    opacity={pressed ? 0.7 : 1}
+                  >
+                    <Text fontWeight="bold" color={POKEDEX_RED}>
+                      No. {String(item.id).padStart(3, '0')}
+                    </Text>
+                    <Text textTransform="capitalize">{item.name}</Text>
+                  </XStack>
+                )}
+              </Pressable>
+            )}
           />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        <XStack gap="$3">
-          <Button size="$3" onPress={() => router.push('/details/1')}>
-            Push detail
-          </Button>
-          <Button size="$3" onPress={() => router.push('/modal')}>
-            Open modal
-          </Button>
-        </XStack>
-
-        {Platform.OS === 'web' && <WebBadge />}
+        )}
       </SafeAreaView>
-    </ThemedView>
+    </YStack>
   );
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
-});
