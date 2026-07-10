@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useEffect } from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import Animated, {
   FadeInDown,
   useAnimatedStyle,
@@ -12,12 +12,14 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
-import type { PokemonStat } from '@/api/pokemon';
+import type { EvolutionNode, PokemonStat } from '@/api/pokemon';
+import { useEvolutionChain } from '@/api/use-evolution-chain';
 import { usePokemonDetail } from '@/api/use-pokemon-detail';
 import { PokedexBrand } from '@/constants/theme';
 import { getTypeColor } from '@/constants/pokemon-types';
 
 const MAX_STAT_VALUE = 255;
+const EVOLUTION_CIRCLE_SIZE = 64;
 
 type StatBarProps = {
   stat: PokemonStat;
@@ -50,13 +52,99 @@ const StatBar = ({ stat, color }: StatBarProps) => {
   );
 };
 
+type EvolutionNodeCircleProps = {
+  id: number;
+  name: string;
+  isCurrent: boolean;
+  onPress: () => void;
+};
+
+const EvolutionNodeCircle = ({ id, name, isCurrent, onPress }: EvolutionNodeCircleProps) => {
+  const { data } = usePokemonDetail(id);
+  const borderColor = data ? getTypeColor(data.types[0]) : '#ddd';
+
+  return (
+    <Pressable onPress={onPress} style={{ alignItems: 'center', width: 80 }}>
+      <View
+        style={{
+          width: EVOLUTION_CIRCLE_SIZE,
+          height: EVOLUTION_CIRCLE_SIZE,
+          borderRadius: EVOLUTION_CIRCLE_SIZE / 2,
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          borderWidth: isCurrent ? 3 : 2,
+          borderColor: isCurrent ? PokedexBrand.red : borderColor,
+        }}
+      >
+        {data?.imageUrl ? (
+          <Image
+            source={{ uri: data.imageUrl }}
+            style={{ width: '100%', height: '100%' }}
+            contentFit="contain"
+            transition={200}
+          />
+        ) : (
+          <Spinner color={PokedexBrand.red} />
+        )}
+      </View>
+      <Text fontSize={11} fontWeight="bold" textTransform="capitalize" numberOfLines={1} mt="$1">
+        {name}
+      </Text>
+    </Pressable>
+  );
+};
+
+type EvolutionBranchProps = {
+  node: EvolutionNode;
+  currentId: number;
+  onSelect: (id: number) => void;
+};
+
+const EvolutionBranch = ({ node, currentId, onSelect }: EvolutionBranchProps) => {
+  return (
+    <YStack items="center" gap="$2">
+      <EvolutionNodeCircle
+        id={node.id}
+        name={node.name}
+        isCurrent={node.id === currentId}
+        onPress={() => onSelect(node.id)}
+      />
+      {node.children.length > 0 && (
+        <>
+          <SymbolView
+            name={{ ios: 'chevron.down', android: 'expand_more', web: 'expand_more' }}
+            tintColor="#999"
+            size={16}
+          />
+          <XStack gap="$4" justify="center" style={{ flexWrap: 'wrap' }}>
+            {node.children.map((child) => (
+              <EvolutionBranch
+                key={child.id}
+                node={child}
+                currentId={currentId}
+                onSelect={onSelect}
+              />
+            ))}
+          </XStack>
+        </>
+      )}
+    </YStack>
+  );
+};
+
 const DetailsScreen = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const pokemonId = Number(id);
   const { data, isLoading, isError } = usePokemonDetail(pokemonId);
+  const { data: evolutionChain } = useEvolutionChain(pokemonId);
 
   const heroColor = data ? getTypeColor(data.types[0]) : PokedexBrand.red;
+  const hasEvolutions = evolutionChain
+    ? evolutionChain.id !== pokemonId || evolutionChain.children.length > 0
+    : false;
 
   if (isLoading) {
     return (
@@ -123,7 +211,7 @@ const DetailsScreen = () => {
             borderTopRightRadius: 32,
           }}
         >
-          <YStack flex={1} p="$5" gap="$5">
+          <ScrollView contentContainerStyle={{ padding: 24, gap: 24 }}>
             <XStack justify="space-around">
               <YStack items="center" gap="$1">
                 <Text fontSize={12} color="#666">
@@ -160,7 +248,24 @@ const DetailsScreen = () => {
                 <StatBar key={stat.key} stat={stat} color={heroColor} />
               ))}
             </YStack>
-          </YStack>
+
+            {hasEvolutions && evolutionChain && (
+              <YStack gap="$3">
+                <Text fontSize={12} color="#666">
+                  Evolution
+                </Text>
+                <EvolutionBranch
+                  node={evolutionChain}
+                  currentId={pokemonId}
+                  onSelect={(nextId) => {
+                    if (nextId !== pokemonId) {
+                      router.push(`/details/${nextId}`);
+                    }
+                  }}
+                />
+              </YStack>
+            )}
+          </ScrollView>
         </Animated.View>
       </SafeAreaView>
     </YStack>
