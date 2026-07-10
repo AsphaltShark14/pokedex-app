@@ -1,3 +1,4 @@
+import { PressStart2P_400Regular, useFonts } from '@expo-google-fonts/press-start-2p';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -13,6 +14,11 @@ SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
   const { theme } = useAppTheme();
+  const [fontsLoaded] = useFonts({ PressStart2P_400Regular });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
