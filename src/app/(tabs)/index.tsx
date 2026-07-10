@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import { SymbolView } from 'expo-symbols';
 import { ActivityIndicator, FlatList, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Paragraph, Text, XStack, YStack } from 'tamagui';
@@ -14,10 +15,21 @@ const HomeScreen = () => {
   return (
     <YStack flex={1} bg={PokedexBrand.cream}>
       <SafeAreaView style={{ flex: 1 }}>
-        <YStack bg={PokedexBrand.red} p="$4" items="center">
+        <YStack bg={PokedexBrand.red} p="$4" items="center" gap="$3">
           <Text style={{ fontFamily: 'PressStart2P_400Regular' }} color="white" fontSize={18}>
             Pokédex
           </Text>
+
+          <Pressable onPress={() => router.push('/search')} style={{ alignSelf: 'stretch' }}>
+            <XStack bg={PokedexBrand.cream} rounded="$10" px="$4" py="$3" items="center" gap="$2">
+              <SymbolView
+                name={{ ios: 'magnifyingglass', android: 'search', web: 'search' }}
+                tintColor="#999"
+                size={16}
+              />
+              <Text color="#999">Search Pokémon</Text>
+            </XStack>
+          </Pressable>
         </YStack>
 
         {isLoading ? (
