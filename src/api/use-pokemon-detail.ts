@@ -2,9 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { fetchPokemonDetail } from '@/api/pokemon';
 
-export const usePokemonDetail = (id: number) => {
+export const usePokemonDetail = (id: number, options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: ['pokemon-detail', id],
     queryFn: () => fetchPokemonDetail(id),
+    enabled: options?.enabled ?? true,
   });
 };

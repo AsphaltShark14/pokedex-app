@@ -17,6 +17,7 @@ import { useEvolutionChain } from '@/api/use-evolution-chain';
 import { usePokemonDetail } from '@/api/use-pokemon-detail';
 import { PokedexBrand } from '@/constants/theme';
 import { getTypeColor } from '@/constants/pokemon-types';
+import { useCompareStore } from '@/stores/use-compare-store';
 
 const MAX_STAT_VALUE = 255;
 const EVOLUTION_CIRCLE_SIZE = 64;
@@ -49,6 +50,44 @@ const StatBar = ({ stat, color }: StatBarProps) => {
         {stat.value}
       </Text>
     </XStack>
+  );
+};
+
+type CompareToggleButtonProps = {
+  isComparing: boolean;
+  color: string;
+  onPress: () => void;
+};
+
+const CompareToggleButton = ({ isComparing, color, onPress }: CompareToggleButtonProps) => {
+  return (
+    <Pressable onPress={onPress}>
+      <XStack
+        items="center"
+        gap="$1"
+        rounded="$10"
+        px="$3"
+        py="$1"
+        style={{
+          borderWidth: 1,
+          borderColor: isComparing ? color : '#ccc',
+          backgroundColor: isComparing ? color : 'transparent',
+        }}
+      >
+        <SymbolView
+          name={{
+            ios: isComparing ? 'checkmark' : 'plus',
+            android: isComparing ? 'check' : 'add',
+            web: isComparing ? 'check' : 'add',
+          }}
+          tintColor={isComparing ? 'white' : '#666'}
+          size={14}
+        />
+        <Text fontSize={12} fontWeight="bold" color={isComparing ? 'white' : '#666'}>
+          Compare
+        </Text>
+      </XStack>
+    </Pressable>
   );
 };
 
@@ -140,6 +179,8 @@ const DetailsScreen = () => {
   const pokemonId = Number(id);
   const { data, isLoading, isError } = usePokemonDetail(pokemonId);
   const { data: evolutionChain } = useEvolutionChain(pokemonId);
+  const isComparing = useCompareStore((state) => state.compareIds.includes(pokemonId));
+  const toggleCompare = useCompareStore((state) => state.toggleCompare);
 
   const heroColor = data ? getTypeColor(data.types[0]) : PokedexBrand.red;
   const hasEvolutions = evolutionChain
@@ -241,9 +282,16 @@ const DetailsScreen = () => {
             </YStack>
 
             <YStack gap="$3">
-              <Text fontSize={12} color="#666">
-                Base Stats
-              </Text>
+              <XStack justify="space-between" items="center">
+                <Text fontSize={12} color="#666">
+                  Base Stats
+                </Text>
+                <CompareToggleButton
+                  isComparing={isComparing}
+                  color={heroColor}
+                  onPress={() => toggleCompare(pokemonId)}
+                />
+              </XStack>
               {data.stats.map((stat) => (
                 <StatBar key={stat.key} stat={stat} color={heroColor} />
               ))}
