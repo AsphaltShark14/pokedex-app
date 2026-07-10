@@ -3,7 +3,7 @@ import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { Colors } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 
-export default function AppTabs() {
+const AppTabs = () => {
   const { theme } = useAppTheme();
   const colors = Colors[theme];
 
@@ -30,4 +30,6 @@ export default function AppTabs() {
       </NativeTabs.Trigger>
     </NativeTabs>
   );
-}
+};
+
+export default AppTabs;

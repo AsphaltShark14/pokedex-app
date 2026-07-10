@@ -11,7 +11,7 @@ import { ThemedView } from '@/components/themed-view';
 import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 
-function getDevMenuHint() {
+const getDevMenuHint = () => {
   if (Platform.OS === 'web') {
     return <ThemedText type="small">use browser devtools</ThemedText>;
   }
@@ -28,9 +28,9 @@ function getDevMenuHint() {
       press <ThemedText type="code">{shortcut}</ThemedText>
     </ThemedText>
   );
-}
+};
 
-export default function HomeScreen() {
+const HomeScreen = () => {
   const router = useRouter();
 
   return (
@@ -72,7 +72,9 @@ export default function HomeScreen() {
       </SafeAreaView>
     </ThemedView>
   );
-}
+};
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {

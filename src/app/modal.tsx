@@ -3,7 +3,7 @@ import { Button, H2, Paragraph, Spinner, YStack } from 'tamagui';
 import { useExampleQuery } from '@/api/use-example-query';
 import { useAppTheme } from '@/hooks/use-app-theme';
 
-export default function ModalScreen() {
+const ModalScreen = () => {
   const { data, isLoading, isError } = useExampleQuery();
   const { toggleTheme } = useAppTheme();
 
@@ -20,4 +20,6 @@ export default function ModalScreen() {
       <Button onPress={toggleTheme}>Toggle theme</Button>
     </YStack>
   );
-}
+};
+
+export default ModalScreen;
