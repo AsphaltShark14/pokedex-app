@@ -28,7 +28,7 @@ const RootLayout = () => {
             <AnimatedSplashOverlay />
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="details/[id]" options={{ headerShown: true, title: 'Details' }} />
+              <Stack.Screen name="details/[id]" options={{ headerShown: false }} />
               <Stack.Screen
                 name="modal"
                 options={{ presentation: 'modal', headerShown: true, title: 'Modal' }}
