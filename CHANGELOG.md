@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-10
+
+### Added
+
+- Evolution chain section on the Pokémon detail page: circular, type-colored thumbnails connected by arrows, showing the Pokémon's full evolution family (including branching chains like Eevee's eeveelutions and multi-stage branches like Wurmple's) — tap any stage to jump to its own detail page. ([#6](https://github.com/AsphaltShark14/pokedex-app/pull/6))
+
 ## [1.1.0] - 2026-07-10
 
 ### Added

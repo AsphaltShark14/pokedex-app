@@ -9,8 +9,10 @@ type PokeApiListResponse = {
   results: { name: string; url: string }[];
 };
 
+// Matches the trailing numeric id in any PokeAPI resource URL
+// (/pokemon/1/, /pokemon-species/25/, /evolution-chain/10/, ...).
 const parseIdFromUrl = (url: string): number => {
-  const match = url.match(/\/pokemon\/(\d+)\/?$/);
+  const match = url.match(/\/(\d+)\/?$/);
   return match ? Number(match[1]) : 0;
 };
 
@@ -100,4 +102,50 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
     })),
     imageUrl: data.sprites.other?.['official-artwork']?.front_default ?? data.sprites.front_default,
   };
+};
+
+export type EvolutionNode = {
+  id: number;
+  name: string;
+  children: EvolutionNode[];
+};
+
+type PokeApiSpeciesResponse = {
+  evolution_chain: { url: string };
+};
+
+type PokeApiEvolutionChainLink = {
+  species: { name: string; url: string };
+  evolves_to: PokeApiEvolutionChainLink[];
+};
+
+type PokeApiEvolutionChainResponse = {
+  chain: PokeApiEvolutionChainLink;
+};
+
+const mapEvolutionLink = (link: PokeApiEvolutionChainLink): EvolutionNode => ({
+  id: parseIdFromUrl(link.species.url),
+  name: formatName(link.species.name),
+  children: link.evolves_to.map(mapEvolutionLink),
+});
+
+export const fetchEvolutionChain = async (pokemonId: number): Promise<EvolutionNode> => {
+  const speciesResponse = await fetch(`${POKEAPI_BASE_URL}/pokemon-species/${pokemonId}`);
+
+  if (!speciesResponse.ok) {
+    throw new Error(`Failed to fetch Pokemon species ${pokemonId}: ${speciesResponse.status}`);
+  }
+
+  const species: PokeApiSpeciesResponse = await speciesResponse.json();
+  const chainId = parseIdFromUrl(species.evolution_chain.url);
+
+  const chainResponse = await fetch(`${POKEAPI_BASE_URL}/evolution-chain/${chainId}`);
+
+  if (!chainResponse.ok) {
+    throw new Error(`Failed to fetch evolution chain ${chainId}: ${chainResponse.status}`);
+  }
+
+  const chainData: PokeApiEvolutionChainResponse = await chainResponse.json();
+
+  return mapEvolutionLink(chainData.chain);
 };
