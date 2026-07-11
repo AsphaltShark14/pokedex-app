@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, TextInput } from 'react-native';
@@ -7,45 +7,40 @@ import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
 import type { PokeResourceItem } from '@/api/poke-resource';
 import { useBrowsableResourceList } from '@/api/use-browsable-resource-list';
-import { BROWSE_RESOURCES } from '@/constants/browse-resources';
 import { PokedexBrand } from '@/constants/theme';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 const DEBOUNCE_MS = 300;
 
-const formatResourceTitle = (resource: string): string =>
-  resource
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-
-const BrowseListRow = ({ item }: { item: PokeResourceItem }) => (
-  <XStack bg="white" rounded="$4" p="$3" items="center" gap="$3">
-    <Text fontWeight="bold" color={PokedexBrand.red}>
-      No. {String(item.id).padStart(3, '0')}
-    </Text>
-    <Text textTransform="capitalize">{item.name}</Text>
-  </XStack>
+const MoveListRow = ({ item, onPress }: { item: PokeResourceItem; onPress: () => void }) => (
+  <Pressable onPress={onPress}>
+    {({ pressed }) => (
+      <XStack bg="white" rounded="$4" p="$3" items="center" gap="$3" opacity={pressed ? 0.7 : 1}>
+        <Text fontWeight="bold" color={PokedexBrand.red}>
+          No. {String(item.id).padStart(3, '0')}
+        </Text>
+        <Text textTransform="capitalize">{item.name.replace(/-/g, ' ')}</Text>
+      </XStack>
+    )}
+  </Pressable>
 );
 
-const BrowseResourceScreen = () => {
+const MovesScreen = () => {
   const router = useRouter();
-  const { resource } = useLocalSearchParams<{ resource: string }>();
-  const title =
-    BROWSE_RESOURCES.find((config) => config.resource === resource)?.title ??
-    formatResourceTitle(resource);
-
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, DEBOUNCE_MS);
 
   const { items, isLoading, isError, hasQuery, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useBrowsableResourceList(resource, debouncedQuery);
+    useBrowsableResourceList('move', debouncedQuery);
 
   return (
     <YStack flex={1} bg={PokedexBrand.cream}>
       <SafeAreaView style={{ flex: 1 }}>
         <XStack items="center" gap="$2" p="$3">
-          <Pressable onPress={() => router.back()} hitSlop={12}>
+          <Pressable
+            onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+            hitSlop={12}
+          >
             <SymbolView
               name={{ ios: 'chevron.left', android: 'chevron_left', web: 'chevron_left' }}
               tintColor={PokedexBrand.red}
@@ -53,7 +48,7 @@ const BrowseResourceScreen = () => {
             />
           </Pressable>
           <Text fontWeight="bold" fontSize={18}>
-            {title}
+            Moves
           </Text>
         </XStack>
 
@@ -67,7 +62,7 @@ const BrowseResourceScreen = () => {
             style={{ flex: 1, fontSize: 16, paddingVertical: 8 }}
             value={query}
             onChangeText={setQuery}
-            placeholder={`Search ${title}`}
+            placeholder="Search Moves"
             placeholderTextColor="#999"
             autoCapitalize="none"
             returnKeyType="search"
@@ -80,18 +75,20 @@ const BrowseResourceScreen = () => {
           </YStack>
         ) : isError ? (
           <YStack flex={1} items="center" justify="center" p="$4">
-            <Paragraph>Couldn&apos;t load {title}. Please try again shortly.</Paragraph>
+            <Paragraph>Couldn&apos;t load Moves. Please try again shortly.</Paragraph>
           </YStack>
         ) : items.length === 0 ? (
           <YStack flex={1} items="center" justify="center" p="$4">
-            <Paragraph color="#666">No results for &quot;{debouncedQuery}&quot;</Paragraph>
+            <Paragraph color="#666">No moves found.</Paragraph>
           </YStack>
         ) : (
           <FlatList<PokeResourceItem>
             data={items}
             keyExtractor={(item) => String(item.id)}
             contentContainerStyle={{ padding: 16, gap: 12 }}
-            renderItem={({ item }) => <BrowseListRow item={item} />}
+            renderItem={({ item }) => (
+              <MoveListRow item={item} onPress={() => router.push(`/moves/${item.id}`)} />
+            )}
             onEndReachedThreshold={0.5}
             onEndReached={() => {
               if (!hasQuery && hasNextPage && !isFetchingNextPage) {
@@ -112,4 +109,4 @@ const BrowseResourceScreen = () => {
   );
 };
 
-export default BrowseResourceScreen;
+export default MovesScreen;
