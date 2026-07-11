@@ -6,8 +6,8 @@ import { Text, XStack, YStack } from 'tamagui';
 
 import { PokedexBrand } from '@/constants/theme';
 
-const BUBBLE_SIZE = 72;
-const COLUMN_OFFSET = BUBBLE_SIZE / 2 + 8;
+const BUBBLE_SIZE = 64;
+const COLUMN_OFFSET = BUBBLE_SIZE / 2 + 6;
 
 type ExploreHref =
   | '/contests'
@@ -57,7 +57,7 @@ const ExploreBubble = ({ category }: { category: ExploreCategory }) => {
 
   return (
     <Pressable onPress={() => router.push(category.href)}>
-      <YStack items="center" gap="$2" width={BUBBLE_SIZE + 16}>
+      <YStack items="center" gap="$1" width={BUBBLE_SIZE + 8}>
         <View
           style={{
             width: BUBBLE_SIZE,
@@ -84,18 +84,24 @@ const ExploreBubble = ({ category }: { category: ExploreCategory }) => {
 };
 
 export const ExploreBubbleGrid = () => {
-  const columnA = EXPLORE_CATEGORIES.filter((_, index) => index % 2 === 0);
-  const columnB = EXPLORE_CATEGORIES.filter((_, index) => index % 2 === 1);
+  const columnA = EXPLORE_CATEGORIES.filter((_, index) => index % 3 === 0);
+  const columnB = EXPLORE_CATEGORIES.filter((_, index) => index % 3 === 1);
+  const columnC = EXPLORE_CATEGORIES.filter((_, index) => index % 3 === 2);
 
   return (
-    <XStack justify="space-around" px="$4">
-      <YStack gap="$5">
+    <XStack justify="space-evenly" px="$2">
+      <YStack gap="$3">
         {columnA.map((category) => (
           <ExploreBubble key={category.label} category={category} />
         ))}
       </YStack>
-      <YStack gap="$5" style={{ marginTop: COLUMN_OFFSET }}>
+      <YStack gap="$3" style={{ marginTop: COLUMN_OFFSET }}>
         {columnB.map((category) => (
+          <ExploreBubble key={category.label} category={category} />
+        ))}
+      </YStack>
+      <YStack gap="$3">
+        {columnC.map((category) => (
           <ExploreBubble key={category.label} category={category} />
         ))}
       </YStack>
