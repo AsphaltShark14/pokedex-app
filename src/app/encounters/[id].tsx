@@ -57,6 +57,15 @@ const EncounterDetailScreen = () => {
               {data.order}
             </Text>
           </XStack>
+
+          {data.description.length > 0 && (
+            <YStack gap="$2" pt="$3">
+              <Text fontSize={13} color="#666">
+                Description
+              </Text>
+              <Paragraph fontSize={14}>{data.description}</Paragraph>
+            </YStack>
+          )}
         </YStack>
       </SafeAreaView>
     </YStack>

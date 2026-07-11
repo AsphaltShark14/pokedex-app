@@ -57,6 +57,26 @@ const GameDetailScreen = () => {
               {data.versionGroupName.replace(/-/g, ' ')}
             </Text>
           </XStack>
+
+          <XStack justify="space-between" items="center" py="$2">
+            <Text fontSize={13} color="#666">
+              Generation
+            </Text>
+            <Text fontWeight="bold" fontSize={14} textTransform="capitalize">
+              {data.generation.replace(/-/g, ' ')}
+            </Text>
+          </XStack>
+
+          {data.region && (
+            <XStack justify="space-between" items="center" py="$2">
+              <Text fontSize={13} color="#666">
+                Region
+              </Text>
+              <Text fontWeight="bold" fontSize={14} textTransform="capitalize">
+                {data.region}
+              </Text>
+            </XStack>
+          )}
         </YStack>
       </SafeAreaView>
     </YStack>

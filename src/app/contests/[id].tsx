@@ -1,11 +1,24 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import { useContestTypeDetail } from '@/api/use-light-resource-detail';
 import { PokedexBrand } from '@/constants/theme';
+
+const CONTEST_COLOR_SWATCHES: Record<string, string> = {
+  Red: '#E0524A',
+  Blue: '#4A90D9',
+  Pink: '#E88CB0',
+  Green: '#5BA85A',
+  Yellow: '#E0C13C',
+  Black: '#3A3A3A',
+  Purple: '#8E5A9E',
+  Gray: '#9A9A9A',
+  White: '#DDDDDD',
+  Brown: '#8B6141',
+};
 
 const ContestDetailScreen = () => {
   const router = useRouter();
@@ -49,6 +62,29 @@ const ContestDetailScreen = () => {
         </XStack>
 
         <YStack p="$5" gap="$1">
+          {data.color && (
+            <XStack justify="space-between" items="center" py="$2">
+              <Text fontSize={13} color="#666">
+                Color
+              </Text>
+              <XStack items="center" gap="$2">
+                <View
+                  style={{
+                    width: 16,
+                    height: 16,
+                    borderRadius: 8,
+                    backgroundColor: CONTEST_COLOR_SWATCHES[data.color] ?? '#999',
+                    borderWidth: 1,
+                    borderColor: '#ddd',
+                  }}
+                />
+                <Text fontWeight="bold" fontSize={14}>
+                  {data.color}
+                </Text>
+              </XStack>
+            </XStack>
+          )}
+
           {data.berryFlavor ? (
             <Pressable onPress={() => router.push(`/berries?flavor=${data.berryFlavor?.id}`)}>
               <XStack justify="space-between" items="center" py="$2">
