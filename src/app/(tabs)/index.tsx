@@ -12,7 +12,7 @@ import {
   ROW_CARD_WIDTH,
 } from '@/components/home/home-section-row';
 import { BROWSE_RESOURCES } from '@/constants/browse-resources';
-import { getPokemonArtworkUrl } from '@/constants/sprites';
+import { getItemSpriteUrl, getPokemonArtworkUrl } from '@/constants/sprites';
 import { PokedexBrand } from '@/constants/theme';
 
 const ROW_IMAGE_SIZE = 72;
@@ -46,21 +46,31 @@ const PokemonRowItem = ({ item, onPress }: { item: PokeResourceItem; onPress: ()
 const SpriteRowItem = ({
   item,
   getImageUrl,
+  onPress,
 }: {
   item: PokeResourceItem;
   getImageUrl: (name: string) => string;
-}) => (
-  <View style={rowCardStyle}>
-    <Image
-      source={{ uri: getImageUrl(item.name) }}
-      style={{ width: ROW_IMAGE_SIZE, height: ROW_IMAGE_SIZE }}
-      contentFit="contain"
-    />
-    <Text fontSize={12} fontWeight="bold" textTransform="capitalize" numberOfLines={1}>
-      {item.name}
-    </Text>
-  </View>
-);
+  onPress?: () => void;
+}) => {
+  const card = (
+    <View style={rowCardStyle}>
+      <Image
+        source={{ uri: getImageUrl(item.name) }}
+        style={{ width: ROW_IMAGE_SIZE, height: ROW_IMAGE_SIZE }}
+        contentFit="contain"
+      />
+      <Text fontSize={12} fontWeight="bold" textTransform="capitalize" numberOfLines={1}>
+        {item.name}
+      </Text>
+    </View>
+  );
+
+  if (!onPress) {
+    return card;
+  }
+
+  return <Pressable onPress={onPress}>{card}</Pressable>;
+};
 
 const TextRowItem = ({ item }: { item: PokeResourceItem }) => (
   <View style={[rowCardStyle, { padding: 12 }]}>
@@ -89,6 +99,28 @@ const PokemonSectionRow = () => {
       onSeeAll={() => router.push('/pokemon-list')}
       renderItem={(item) => (
         <PokemonRowItem item={item} onPress={() => router.push(`/details/${item.id}`)} />
+      )}
+    />
+  );
+};
+
+const ItemsSectionRow = () => {
+  const router = useRouter();
+  const { data, isLoading } = useResourcePreview('item', 10);
+
+  return (
+    <HomeSectionRow
+      title="Items"
+      items={data?.items}
+      isLoading={isLoading}
+      keyExtractor={(item) => String(item.id)}
+      onSeeAll={() => router.push('/items')}
+      renderItem={(item) => (
+        <SpriteRowItem
+          item={item}
+          getImageUrl={getItemSpriteUrl}
+          onPress={() => router.push(`/items/${item.id}`)}
+        />
       )}
     />
   );
@@ -128,6 +160,7 @@ const HomeScreen = () => {
           </YStack>
 
           <PokemonSectionRow />
+          <ItemsSectionRow />
           {BROWSE_RESOURCES.map((config) => (
             <BrowseSectionRow key={config.resource} {...config} />
           ))}

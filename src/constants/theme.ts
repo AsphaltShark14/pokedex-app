@@ -29,6 +29,7 @@ export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 export const PokedexBrand = {
   red: '#DC0A2D',
   cream: '#FFF6E5',
+  itemBlue: '#4A6FA5',
 } as const;
 
 export const Fonts = Platform.select({

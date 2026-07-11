@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-07-11
+
+### Added
+
+- Dedicated Items experience: a browse page with real sprite images, infinite scroll, and inline search, plus a Category (54 options) and Attribute (8 options) filter, each opening a searchable picker sheet since there are too many to fit as inline chips. ([#10](https://github.com/AsphaltShark14/pokedex-app/pull/10))
+- Item detail page showing cost, fling power/effect, tappable Category and Attribute values that jump into that filtered list, an effect description, and a "Held By" row of real Pokémon (with artwork) known to carry that item, tapping through to their own detail page. ([#10](https://github.com/AsphaltShark14/pokedex-app/pull/10))
+
 ## [1.4.0] - 2026-07-11
 
 ### Added
