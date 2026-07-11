@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-07-11
+
+### Added
+
+- Locations get full Items/Berries-depth treatment: a browse page with search, infinite scroll, and a Region filter (11 regions); a Location detail page with a tappable Region and a list of Areas; and a new Location-Area detail page showing real, tappable Pokémon encounters as circular artwork. ([#11](https://github.com/AsphaltShark14/pokedex-app/pull/11))
+- Moves get a full detail page: type-colored hero, power/PP/accuracy/priority/damage class/target/generation, an effect description, and a "Learned By" row of real Pokémon. ([#11](https://github.com/AsphaltShark14/pokedex-app/pull/11))
+- Lightweight browse + detail pages for Contests (with a tappable Berry Flavor cross-link into the Berries list), Encounters, and Games. ([#11](https://github.com/AsphaltShark14/pokedex-app/pull/11))
+- "Explore More" section on the home screen: a staggered bubble grid linking to Contests, Encounters, Evolution, Games, Machines, and Moves. Evolution and Machines open a clearly-labeled "coming soon" placeholder, since PokéAPI's list endpoint gives no usable name for either. ([#11](https://github.com/AsphaltShark14/pokedex-app/pull/11))
+
+### Changed
+
+- Home screen reordered to four featured rows — Pokémon, Items, Berries, Locations — followed by the new Explore More section. ([#11](https://github.com/AsphaltShark14/pokedex-app/pull/11))
+
+### Removed
+
+- The generic non-interactive browse page (`/browse/[resource]`) and its config, fully superseded by dedicated pages for every category. ([#11](https://github.com/AsphaltShark14/pokedex-app/pull/11))
+
 ## [1.6.0] - 2026-07-11
 
 ### Added

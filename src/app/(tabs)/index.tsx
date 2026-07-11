@@ -6,12 +6,12 @@ import { Text, YStack } from 'tamagui';
 
 import type { PokeResourceItem } from '@/api/poke-resource';
 import { useResourcePreview } from '@/api/use-resource-preview';
+import { ExploreBubbleGrid } from '@/components/home/explore-bubble-grid';
 import {
   HomeSectionRow,
   ROW_CARD_HEIGHT,
   ROW_CARD_WIDTH,
 } from '@/components/home/home-section-row';
-import { BROWSE_RESOURCES } from '@/constants/browse-resources';
 import { getBerrySpriteUrl, getItemSpriteUrl, getPokemonArtworkUrl } from '@/constants/sprites';
 import { PokedexBrand } from '@/constants/theme';
 
@@ -72,19 +72,27 @@ const SpriteRowItem = ({
   return <Pressable onPress={onPress}>{card}</Pressable>;
 };
 
-const TextRowItem = ({ item }: { item: PokeResourceItem }) => (
-  <View style={[rowCardStyle, { padding: 12 }]}>
-    <Text
-      fontSize={13}
-      fontWeight="bold"
-      textTransform="capitalize"
-      numberOfLines={3}
-      text="center"
-    >
-      {item.name}
-    </Text>
-  </View>
-);
+const TextRowItem = ({ item, onPress }: { item: PokeResourceItem; onPress?: () => void }) => {
+  const card = (
+    <View style={[rowCardStyle, { padding: 12 }]}>
+      <Text
+        fontSize={13}
+        fontWeight="bold"
+        textTransform="capitalize"
+        numberOfLines={3}
+        text="center"
+      >
+        {item.name.replace(/-/g, ' ')}
+      </Text>
+    </View>
+  );
+
+  if (!onPress) {
+    return card;
+  }
+
+  return <Pressable onPress={onPress}>{card}</Pressable>;
+};
 
 const PokemonSectionRow = () => {
   const router = useRouter();
@@ -99,28 +107,6 @@ const PokemonSectionRow = () => {
       onSeeAll={() => router.push('/pokemon-list')}
       renderItem={(item) => (
         <PokemonRowItem item={item} onPress={() => router.push(`/details/${item.id}`)} />
-      )}
-    />
-  );
-};
-
-const BerriesSectionRow = () => {
-  const router = useRouter();
-  const { data, isLoading } = useResourcePreview('berry', 10);
-
-  return (
-    <HomeSectionRow
-      title="Berries"
-      items={data?.items}
-      isLoading={isLoading}
-      keyExtractor={(item) => String(item.id)}
-      onSeeAll={() => router.push('/berries')}
-      renderItem={(item) => (
-        <SpriteRowItem
-          item={item}
-          getImageUrl={getBerrySpriteUrl}
-          onPress={() => router.push(`/berries/${item.id}`)}
-        />
       )}
     />
   );
@@ -148,24 +134,42 @@ const ItemsSectionRow = () => {
   );
 };
 
-const BrowseSectionRow = ({ resource, title, getImageUrl }: (typeof BROWSE_RESOURCES)[number]) => {
+const BerriesSectionRow = () => {
   const router = useRouter();
-  const { data, isLoading } = useResourcePreview(resource, 10);
+  const { data, isLoading } = useResourcePreview('berry', 10);
 
   return (
     <HomeSectionRow
-      title={title}
+      title="Berries"
       items={data?.items}
       isLoading={isLoading}
       keyExtractor={(item) => String(item.id)}
-      onSeeAll={() => router.push(`/browse/${resource}`)}
-      renderItem={(item) =>
-        getImageUrl ? (
-          <SpriteRowItem item={item} getImageUrl={getImageUrl} />
-        ) : (
-          <TextRowItem item={item} />
-        )
-      }
+      onSeeAll={() => router.push('/berries')}
+      renderItem={(item) => (
+        <SpriteRowItem
+          item={item}
+          getImageUrl={getBerrySpriteUrl}
+          onPress={() => router.push(`/berries/${item.id}`)}
+        />
+      )}
+    />
+  );
+};
+
+const LocationsSectionRow = () => {
+  const router = useRouter();
+  const { data, isLoading } = useResourcePreview('location', 10);
+
+  return (
+    <HomeSectionRow
+      title="Locations"
+      items={data?.items}
+      isLoading={isLoading}
+      keyExtractor={(item) => String(item.id)}
+      onSeeAll={() => router.push('/locations')}
+      renderItem={(item) => (
+        <TextRowItem item={item} onPress={() => router.push(`/locations/${item.id}`)} />
+      )}
     />
   );
 };
@@ -174,7 +178,7 @@ const HomeScreen = () => {
   return (
     <YStack flex={1} bg={PokedexBrand.cream}>
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
           <YStack bg={PokedexBrand.red} p="$4" items="center">
             <Text style={{ fontFamily: 'PressStart2P_400Regular' }} color="white" fontSize={18}>
               Pokédex
@@ -182,11 +186,16 @@ const HomeScreen = () => {
           </YStack>
 
           <PokemonSectionRow />
-          <BerriesSectionRow />
           <ItemsSectionRow />
-          {BROWSE_RESOURCES.map((config) => (
-            <BrowseSectionRow key={config.resource} {...config} />
-          ))}
+          <BerriesSectionRow />
+          <LocationsSectionRow />
+
+          <YStack pt="$4" pb="$3" px="$4">
+            <Text fontWeight="bold" fontSize={18}>
+              Explore More
+            </Text>
+          </YStack>
+          <ExploreBubbleGrid />
         </ScrollView>
       </SafeAreaView>
     </YStack>

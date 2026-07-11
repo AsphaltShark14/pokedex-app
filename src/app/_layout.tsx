@@ -125,7 +125,18 @@ const RootLayout = () => {
               <Stack.Screen name="berries/[id]" options={{ headerShown: false }} />
               <Stack.Screen name="items/index" options={{ headerShown: false }} />
               <Stack.Screen name="items/[id]" options={{ headerShown: false }} />
-              <Stack.Screen name="browse/[resource]" options={{ headerShown: false }} />
+              <Stack.Screen name="locations/index" options={{ headerShown: false }} />
+              <Stack.Screen name="locations/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="location-areas/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="moves/index" options={{ headerShown: false }} />
+              <Stack.Screen name="moves/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="contests/index" options={{ headerShown: false }} />
+              <Stack.Screen name="contests/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="encounters/index" options={{ headerShown: false }} />
+              <Stack.Screen name="encounters/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="games/index" options={{ headerShown: false }} />
+              <Stack.Screen name="games/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="explore/[resource]" options={{ headerShown: false }} />
               <Stack.Screen
                 name="modal"
                 options={{ presentation: 'modal', headerShown: true, title: 'Modal' }}
