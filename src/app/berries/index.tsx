@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, TextInput } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, ScrollView, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
@@ -65,37 +65,54 @@ const FilterChip = ({
   </Pressable>
 );
 
-const FilterChipRow = ({
-  label,
-  kind,
+type FilterOption = { key: string; label: string; filter: ActiveFilter };
+
+const CombinedFilterRow = ({
   active,
   onSelect,
 }: {
-  label: string;
-  kind: BerryCategoryKind;
   active: ActiveFilter;
   onSelect: (filter: ActiveFilter) => void;
 }) => {
-  const { data } = useBerryCategoryList(kind);
-  const isKindActive = active?.kind === kind;
+  const firmness = useBerryCategoryList('firmness');
+  const flavor = useBerryCategoryList('flavor');
+
+  const options: FilterOption[] = [
+    { key: 'all', label: 'All', filter: null },
+    ...(firmness.data?.items.map((item) => ({
+      key: `firmness-${item.id}`,
+      label: item.name,
+      filter: { kind: 'firmness' as const, id: item.id },
+    })) ?? []),
+    ...(flavor.data?.items.map((item) => ({
+      key: `flavor-${item.id}`,
+      label: item.name,
+      filter: { kind: 'flavor' as const, id: item.id },
+    })) ?? []),
+  ];
 
   return (
-    <YStack gap="$2" px="$3" pb="$2">
-      <Text fontSize={12} color="#666">
-        {label}
-      </Text>
-      <XStack gap="$2" style={{ flexWrap: 'wrap' }}>
-        <FilterChip label="All" selected={!isKindActive} onPress={() => onSelect(null)} />
-        {data?.items.map((item) => (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ paddingHorizontal: 12, gap: 8 }}
+    >
+      {options.map((option) => {
+        const selected =
+          option.filter === null
+            ? active === null
+            : active?.kind === option.filter.kind && active?.id === option.filter.id;
+
+        return (
           <FilterChip
-            key={item.id}
-            label={item.name}
-            selected={isKindActive && active?.id === item.id}
-            onPress={() => onSelect({ kind, id: item.id })}
+            key={option.key}
+            label={option.label}
+            selected={selected}
+            onPress={() => onSelect(option.filter)}
           />
-        ))}
-      </XStack>
-    </YStack>
+        );
+      })}
+    </ScrollView>
   );
 };
 
@@ -135,21 +152,8 @@ const BerriesScreen = () => {
           </Text>
         </XStack>
 
-        <FilterChipRow
-          label="Firmness"
-          kind="firmness"
-          active={activeFilter}
-          onSelect={setActiveFilter}
-        />
-        <FilterChipRow
-          label="Flavor"
-          kind="flavor"
-          active={activeFilter}
-          onSelect={setActiveFilter}
-        />
-
         {!activeFilter && (
-          <XStack bg="white" rounded="$10" px="$4" py="$2" items="center" gap="$2" mx="$3" my="$3">
+          <XStack bg="white" rounded="$10" px="$4" py="$2" items="center" gap="$2" mx="$3" mb="$3">
             <SymbolView
               name={{ ios: 'magnifyingglass', android: 'search', web: 'search' }}
               tintColor="#999"
@@ -166,6 +170,10 @@ const BerriesScreen = () => {
             />
           </XStack>
         )}
+
+        <YStack pb="$3">
+          <CombinedFilterRow active={activeFilter} onSelect={setActiveFilter} />
+        </YStack>
 
         {isLoading ? (
           <YStack flex={1} items="center" justify="center">
