@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, ScrollView, TextInput } from 'react-native';
+import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
@@ -143,72 +144,89 @@ const BerriesScreen = () => {
         </XStack>
 
         {!activeFilter && (
-          <XStack bg="white" rounded="$10" px="$4" py="$2" items="center" gap="$2" mx="$3" mb="$3">
-            <SymbolView
-              name={{ ios: 'magnifyingglass', android: 'search', web: 'search' }}
-              tintColor="#999"
-              size={16}
-            />
-            <TextInput
-              style={{ flex: 1, fontSize: 16, paddingVertical: 8 }}
-              value={query}
-              onChangeText={setQuery}
-              placeholder="Search Berries"
-              placeholderTextColor="#999"
-              autoCapitalize="none"
-              returnKeyType="search"
-            />
-          </XStack>
+          <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut.duration(150)}>
+            <XStack
+              bg="white"
+              rounded="$10"
+              px="$4"
+              py="$2"
+              items="center"
+              gap="$2"
+              mx="$3"
+              mb="$3"
+            >
+              <SymbolView
+                name={{ ios: 'magnifyingglass', android: 'search', web: 'search' }}
+                tintColor="#999"
+                size={16}
+              />
+              <TextInput
+                style={{ flex: 1, fontSize: 16, paddingVertical: 8 }}
+                value={query}
+                onChangeText={setQuery}
+                placeholder="Search Berries"
+                placeholderTextColor="#999"
+                autoCapitalize="none"
+                returnKeyType="search"
+              />
+            </XStack>
+          </Animated.View>
         )}
 
-        <FilterChipRow
-          label="Firmness"
-          kind="firmness"
-          active={activeFilter}
-          onSelect={setActiveFilter}
-        />
-        <FilterChipRow
-          label="Flavor"
-          kind="flavor"
-          active={activeFilter}
-          onSelect={setActiveFilter}
-        />
-
-        {isLoading ? (
-          <YStack flex={1} items="center" justify="center">
-            <ActivityIndicator color={PokedexBrand.berryGreen} />
-          </YStack>
-        ) : isError ? (
-          <YStack flex={1} items="center" justify="center" p="$4">
-            <Paragraph>Couldn&apos;t load Berries. Please try again shortly.</Paragraph>
-          </YStack>
-        ) : items.length === 0 ? (
-          <YStack flex={1} items="center" justify="center" p="$4">
-            <Paragraph color="#666">No berries found.</Paragraph>
-          </YStack>
-        ) : (
-          <FlatList<PokeResourceItem>
-            data={items}
-            keyExtractor={(item) => String(item.id)}
-            contentContainerStyle={{ padding: 16, gap: 12 }}
-            renderItem={({ item }) => (
-              <BerryListRow item={item} onPress={() => router.push(`/berries/${item.id}`)} />
-            )}
-            onEndReachedThreshold={0.5}
-            onEndReached={() => {
-              if (!activeFilter && browsable.hasNextPage && !browsable.isFetchingNextPage) {
-                browsable.fetchNextPage();
-              }
-            }}
-            ListFooterComponent={
-              !activeFilter && browsable.isFetchingNextPage ? (
-                <YStack py="$4">
-                  <ActivityIndicator color={PokedexBrand.berryGreen} />
-                </YStack>
-              ) : null
-            }
+        <Animated.View layout={LinearTransition.duration(200)}>
+          <FilterChipRow
+            label="Firmness"
+            kind="firmness"
+            active={activeFilter}
+            onSelect={setActiveFilter}
           />
-        )}
+        </Animated.View>
+        <Animated.View layout={LinearTransition.duration(200)}>
+          <FilterChipRow
+            label="Flavor"
+            kind="flavor"
+            active={activeFilter}
+            onSelect={setActiveFilter}
+          />
+        </Animated.View>
+
+        <Animated.View style={{ flex: 1 }} layout={LinearTransition.duration(200)}>
+          {isLoading ? (
+            <YStack flex={1} items="center" justify="center">
+              <ActivityIndicator color={PokedexBrand.berryGreen} />
+            </YStack>
+          ) : isError ? (
+            <YStack flex={1} items="center" justify="center" p="$4">
+              <Paragraph>Couldn&apos;t load Berries. Please try again shortly.</Paragraph>
+            </YStack>
+          ) : items.length === 0 ? (
+            <YStack flex={1} items="center" justify="center" p="$4">
+              <Paragraph color="#666">No berries found.</Paragraph>
+            </YStack>
+          ) : (
+            <FlatList<PokeResourceItem>
+              data={items}
+              keyExtractor={(item) => String(item.id)}
+              contentContainerStyle={{ padding: 16, gap: 12 }}
+              renderItem={({ item }) => (
+                <BerryListRow item={item} onPress={() => router.push(`/berries/${item.id}`)} />
+              )}
+              onEndReachedThreshold={0.5}
+              onEndReached={() => {
+                if (!activeFilter && browsable.hasNextPage && !browsable.isFetchingNextPage) {
+                  browsable.fetchNextPage();
+                }
+              }}
+              ListFooterComponent={
+                !activeFilter && browsable.isFetchingNextPage ? (
+                  <YStack py="$4">
+                    <ActivityIndicator color={PokedexBrand.berryGreen} />
+                  </YStack>
+                ) : null
+              }
+            />
+          )}
+        </Animated.View>
       </SafeAreaView>
     </YStack>
   );
