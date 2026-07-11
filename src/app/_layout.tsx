@@ -121,6 +121,8 @@ const RootLayout = () => {
               <Stack.Screen name="(tabs)" />
               <Stack.Screen name="details/[id]" options={{ headerShown: false }} />
               <Stack.Screen name="pokemon-list" options={{ headerShown: false }} />
+              <Stack.Screen name="berries/index" options={{ headerShown: false }} />
+              <Stack.Screen name="berries/[id]" options={{ headerShown: false }} />
               <Stack.Screen name="browse/[resource]" options={{ headerShown: false }} />
               <Stack.Screen
                 name="modal"

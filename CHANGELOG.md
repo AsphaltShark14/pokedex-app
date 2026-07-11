@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-07-11
+
+### Added
+
+- Dedicated Berries experience: a browse page with real sprite images, infinite scroll, and inline search, plus filter chips for Firmness (Very Soft → Super Hard) and Flavor (Spicy, Dry, Sweet, Bitter, Sour) that swap in PokéAPI's pre-filtered category lists. ([#9](https://github.com/AsphaltShark14/pokedex-app/pull/9))
+- Berry detail page showing growth time, max harvest, natural gift power/type, size, smoothness, and soil dryness, with tappable Firmness and Flavor values that jump straight into that filtered category list. ([#9](https://github.com/AsphaltShark14/pokedex-app/pull/9))
+
 ## [1.4.0] - 2026-07-11
 
 ### Added
