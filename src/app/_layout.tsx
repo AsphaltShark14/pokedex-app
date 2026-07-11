@@ -120,7 +120,8 @@ const RootLayout = () => {
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name="(tabs)" />
               <Stack.Screen name="details/[id]" options={{ headerShown: false }} />
-              <Stack.Screen name="search" options={{ headerShown: false }} />
+              <Stack.Screen name="pokemon-list" options={{ headerShown: false }} />
+              <Stack.Screen name="browse/[resource]" options={{ headerShown: false }} />
               <Stack.Screen
                 name="modal"
                 options={{ presentation: 'modal', headerShown: true, title: 'Modal' }}
