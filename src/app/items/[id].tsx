@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
@@ -105,7 +105,7 @@ const ItemDetailScreen = () => {
             borderTopRightRadius: 32,
           }}
         >
-          <YStack p="$5" gap="$1">
+          <ScrollView contentContainerStyle={{ padding: 24, gap: 4 }}>
             <InfoRow
               label="Category"
               value={data.category.name}
@@ -158,7 +158,11 @@ const ItemDetailScreen = () => {
                 <Text fontSize={13} color="#666">
                   Held By
                 </Text>
-                <XStack gap="$4" style={{ flexWrap: 'wrap' }}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ gap: 16 }}
+                >
                   {data.heldByPokemon.map((pokemon) => (
                     <Pressable
                       key={pokemon.id}
@@ -195,10 +199,10 @@ const ItemDetailScreen = () => {
                       </Text>
                     </Pressable>
                   ))}
-                </XStack>
+                </ScrollView>
               </YStack>
             )}
-          </YStack>
+          </ScrollView>
         </YStack>
       </SafeAreaView>
     </YStack>
