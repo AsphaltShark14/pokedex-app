@@ -11,7 +11,7 @@ type PokeApiListResponse = {
 
 // Matches the trailing numeric id in any PokeAPI resource URL
 // (/pokemon/1/, /pokemon-species/25/, /evolution-chain/10/, ...).
-const parseIdFromUrl = (url: string): number => {
+export const parseIdFromUrl = (url: string): number => {
   const match = url.match(/\/(\d+)\/?$/);
   return match ? Number(match[1]) : 0;
 };

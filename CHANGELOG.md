@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-07-11
+
+### Added
+
+- Enhanced home screen: horizontally-scrollable preview rows for Pokémon, Berries, Items, Moves, Locations, Encounters, and Contests, each with a "See all" link into a full paginated (infinite-scroll) browse page. Pokémon, Berries, and Items show real sprite images fetched with zero extra API calls. ([#8](https://github.com/AsphaltShark14/pokedex-app/pull/8))
+- Per-category search: each browse page (Pokémon, Items, Locations, etc.) now has its own inline search bar that filters within that category. ([#8](https://github.com/AsphaltShark14/pokedex-app/pull/8))
+
+### Changed
+
+- Removed the home screen's global "Search Pokémon" bar in favor of the new per-category search on each browse page. ([#8](https://github.com/AsphaltShark14/pokedex-app/pull/8))
+
 ## [1.3.0] - 2026-07-10
 
 ### Added
