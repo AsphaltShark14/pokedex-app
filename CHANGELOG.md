@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-07-10
+
+### Added
+
+- Compare Pokémon: toggle up to two Pokémon from their detail pages via a "Compare" button above Base Stats; a floating button appears once at least one is selected, opening a modal with side-by-side image/name/types and animated two-sided stat bars highlighting the higher value per stat. Selections persist across navigation and dismissing the modal; an explicit "Clear comparison" action empties the selection. ([#7](https://github.com/AsphaltShark14/pokedex-app/pull/7))
+
 ## [1.2.0] - 2026-07-10
 
 ### Added
