@@ -69,7 +69,10 @@ const BerryDetailScreen = () => {
     <YStack flex={1} style={{ backgroundColor: PokedexBrand.berryGreen }}>
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
         <XStack p="$3">
-          <Pressable onPress={() => router.back()} hitSlop={12}>
+          <Pressable
+            onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+            hitSlop={12}
+          >
             <SymbolView
               name={{ ios: 'chevron.left', android: 'chevron_left', web: 'chevron_left' }}
               tintColor="white"

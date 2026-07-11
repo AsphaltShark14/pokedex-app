@@ -65,54 +65,41 @@ const FilterChip = ({
   </Pressable>
 );
 
-type FilterOption = { key: string; label: string; filter: ActiveFilter };
-
-const CombinedFilterRow = ({
+const FilterChipRow = ({
+  label,
+  kind,
   active,
   onSelect,
 }: {
+  label: string;
+  kind: BerryCategoryKind;
   active: ActiveFilter;
   onSelect: (filter: ActiveFilter) => void;
 }) => {
-  const firmness = useBerryCategoryList('firmness');
-  const flavor = useBerryCategoryList('flavor');
-
-  const options: FilterOption[] = [
-    { key: 'all', label: 'All', filter: null },
-    ...(firmness.data?.items.map((item) => ({
-      key: `firmness-${item.id}`,
-      label: item.name,
-      filter: { kind: 'firmness' as const, id: item.id },
-    })) ?? []),
-    ...(flavor.data?.items.map((item) => ({
-      key: `flavor-${item.id}`,
-      label: item.name,
-      filter: { kind: 'flavor' as const, id: item.id },
-    })) ?? []),
-  ];
+  const { data } = useBerryCategoryList(kind);
+  const isKindActive = active?.kind === kind;
 
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ paddingHorizontal: 12, gap: 8 }}
-    >
-      {options.map((option) => {
-        const selected =
-          option.filter === null
-            ? active === null
-            : active?.kind === option.filter.kind && active?.id === option.filter.id;
-
-        return (
+    <YStack gap="$2" pb="$3">
+      <Text fontSize={12} color="#666" px="$3">
+        {label}
+      </Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 12, gap: 8 }}
+      >
+        <FilterChip label="All" selected={!isKindActive} onPress={() => onSelect(null)} />
+        {data?.items.map((item) => (
           <FilterChip
-            key={option.key}
-            label={option.label}
-            selected={selected}
-            onPress={() => onSelect(option.filter)}
+            key={item.id}
+            label={item.name}
+            selected={isKindActive && active?.id === item.id}
+            onPress={() => onSelect({ kind, id: item.id })}
           />
-        );
-      })}
-    </ScrollView>
+        ))}
+      </ScrollView>
+    </YStack>
   );
 };
 
@@ -140,7 +127,10 @@ const BerriesScreen = () => {
     <YStack flex={1} bg={PokedexBrand.cream}>
       <SafeAreaView style={{ flex: 1 }}>
         <XStack items="center" gap="$2" p="$3">
-          <Pressable onPress={() => router.back()} hitSlop={12}>
+          <Pressable
+            onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+            hitSlop={12}
+          >
             <SymbolView
               name={{ ios: 'chevron.left', android: 'chevron_left', web: 'chevron_left' }}
               tintColor={PokedexBrand.berryGreen}
@@ -171,9 +161,18 @@ const BerriesScreen = () => {
           </XStack>
         )}
 
-        <YStack pb="$3">
-          <CombinedFilterRow active={activeFilter} onSelect={setActiveFilter} />
-        </YStack>
+        <FilterChipRow
+          label="Firmness"
+          kind="firmness"
+          active={activeFilter}
+          onSelect={setActiveFilter}
+        />
+        <FilterChipRow
+          label="Flavor"
+          kind="flavor"
+          active={activeFilter}
+          onSelect={setActiveFilter}
+        />
 
         {isLoading ? (
           <YStack flex={1} items="center" justify="center">
