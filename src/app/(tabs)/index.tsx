@@ -12,7 +12,7 @@ import {
   ROW_CARD_WIDTH,
 } from '@/components/home/home-section-row';
 import { BROWSE_RESOURCES } from '@/constants/browse-resources';
-import { getItemSpriteUrl, getPokemonArtworkUrl } from '@/constants/sprites';
+import { getBerrySpriteUrl, getItemSpriteUrl, getPokemonArtworkUrl } from '@/constants/sprites';
 import { PokedexBrand } from '@/constants/theme';
 
 const ROW_IMAGE_SIZE = 72;
@@ -104,6 +104,28 @@ const PokemonSectionRow = () => {
   );
 };
 
+const BerriesSectionRow = () => {
+  const router = useRouter();
+  const { data, isLoading } = useResourcePreview('berry', 10);
+
+  return (
+    <HomeSectionRow
+      title="Berries"
+      items={data?.items}
+      isLoading={isLoading}
+      keyExtractor={(item) => String(item.id)}
+      onSeeAll={() => router.push('/berries')}
+      renderItem={(item) => (
+        <SpriteRowItem
+          item={item}
+          getImageUrl={getBerrySpriteUrl}
+          onPress={() => router.push(`/berries/${item.id}`)}
+        />
+      )}
+    />
+  );
+};
+
 const ItemsSectionRow = () => {
   const router = useRouter();
   const { data, isLoading } = useResourcePreview('item', 10);
@@ -160,6 +182,7 @@ const HomeScreen = () => {
           </YStack>
 
           <PokemonSectionRow />
+          <BerriesSectionRow />
           <ItemsSectionRow />
           {BROWSE_RESOURCES.map((config) => (
             <BrowseSectionRow key={config.resource} {...config} />
