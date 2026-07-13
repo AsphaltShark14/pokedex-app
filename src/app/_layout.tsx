@@ -1,5 +1,6 @@
 import { PressStart2P_400Regular, useFonts } from '@expo-google-fonts/press-start-2p';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { BlurView } from 'expo-blur';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import * as SplashScreen from 'expo-splash-screen';
@@ -56,7 +57,9 @@ const CompareFab = () => {
       ]}
     >
       <Pressable onPress={() => router.push('/compare')}>
-        <View
+        <BlurView
+          intensity={80}
+          tint="light"
           style={{
             width: 56,
             height: 56,
@@ -64,8 +67,8 @@ const CompareFab = () => {
             alignItems: 'center',
             justifyContent: 'center',
             borderWidth: 2,
-            borderColor: 'white',
-            backgroundColor: 'white',
+            borderColor: PokedexBrand.red,
+            overflow: 'hidden',
           }}
         >
           <SymbolView
@@ -77,7 +80,7 @@ const CompareFab = () => {
             tintColor={PokedexBrand.red}
             size={26}
           />
-        </View>
+        </BlurView>
         <View
           style={{
             position: 'absolute',
