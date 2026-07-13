@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Tab bar restyled to match the rest of the app: the active tab's icon and label now tint red like the header, and both tabs use real SF Symbol/Material icons (house, magnifying glass) instead of custom PNG assets. ([#13](https://github.com/AsphaltShark14/pokedex-app/pull/13))
 - The Home/Search tab bar now stays visible on every screen — Pokémon detail, category lists, everything — instead of only on the two tab roots; each tab keeps its own independent navigation history. ([#13](https://github.com/AsphaltShark14/pokedex-app/pull/13))
+- The floating Compare button now matches the nav bar's frosted-glass material instead of a solid white circle, with a red outline so it stays visible over any background. ([#13](https://github.com/AsphaltShark14/pokedex-app/pull/13))
 
 ## [1.8.0] - 2026-07-13
 
