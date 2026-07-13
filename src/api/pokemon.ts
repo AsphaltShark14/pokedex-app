@@ -1,3 +1,4 @@
+import type { PokeResourceItem } from '@/api/poke-resource';
 import { POKEAPI_BASE_URL } from '@/constants/api';
 
 export type PokemonListItem = {
@@ -37,15 +38,36 @@ export type PokemonStat = {
   value: number;
 };
 
+export type PokemonAbility = {
+  id: number;
+  name: string;
+  isHidden: boolean;
+};
+
+export type PokemonHeldItem = {
+  item: PokeResourceItem;
+  rarity: number;
+};
+
+export type PokemonMove = {
+  id: number;
+  name: string;
+  method: string;
+  levelLearnedAt: number;
+};
+
 export type PokemonDetail = {
   id: number;
   name: string;
   height: number;
   weight: number;
+  baseExperience: number;
   types: string[];
-  abilities: string[];
+  abilities: PokemonAbility[];
   stats: PokemonStat[];
   imageUrl: string | null;
+  heldItems: PokemonHeldItem[];
+  moves: PokemonMove[];
 };
 
 type PokeApiDetailResponse = {
@@ -53,8 +75,9 @@ type PokeApiDetailResponse = {
   name: string;
   height: number;
   weight: number;
+  base_experience: number;
   types: { type: { name: string } }[];
-  abilities: { ability: { name: string } }[];
+  abilities: { ability: { name: string; url: string }; is_hidden: boolean }[];
   stats: { base_stat: number; stat: { name: string } }[];
   sprites: {
     front_default: string | null;
@@ -62,6 +85,11 @@ type PokeApiDetailResponse = {
       'official-artwork'?: { front_default: string | null };
     };
   };
+  held_items: { item: { name: string; url: string }; version_details: { rarity: number }[] }[];
+  moves: {
+    move: { name: string; url: string };
+    version_group_details: { level_learned_at: number; move_learn_method: { name: string } }[];
+  }[];
 };
 
 const STAT_LABELS: Record<string, string> = {
@@ -93,14 +121,32 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
     name: formatName(data.name),
     height: data.height,
     weight: data.weight,
+    baseExperience: data.base_experience,
     types: data.types.map((entry) => formatName(entry.type.name)),
-    abilities: data.abilities.map((entry) => formatName(entry.ability.name)),
+    abilities: data.abilities.map((entry) => ({
+      id: parseIdFromUrl(entry.ability.url),
+      name: formatName(entry.ability.name),
+      isHidden: entry.is_hidden,
+    })),
     stats: data.stats.map((entry) => ({
       key: entry.stat.name,
       label: STAT_LABELS[entry.stat.name] ?? formatName(entry.stat.name),
       value: entry.base_stat,
     })),
     imageUrl: data.sprites.other?.['official-artwork']?.front_default ?? data.sprites.front_default,
+    heldItems: data.held_items.map((entry) => ({
+      item: { id: parseIdFromUrl(entry.item.url), name: entry.item.name },
+      rarity: entry.version_details[0]?.rarity ?? 0,
+    })),
+    moves: data.moves.map((entry) => {
+      const latestDetail = entry.version_group_details[entry.version_group_details.length - 1];
+      return {
+        id: parseIdFromUrl(entry.move.url),
+        name: formatName(entry.move.name),
+        method: formatName(latestDetail?.move_learn_method.name ?? 'other'),
+        levelLearnedAt: latestDetail?.level_learned_at ?? 0,
+      };
+    }),
   };
 };
 
@@ -108,10 +154,6 @@ export type EvolutionNode = {
   id: number;
   name: string;
   children: EvolutionNode[];
-};
-
-type PokeApiSpeciesResponse = {
-  evolution_chain: { url: string };
 };
 
 type PokeApiEvolutionChainLink = {
@@ -129,16 +171,7 @@ const mapEvolutionLink = (link: PokeApiEvolutionChainLink): EvolutionNode => ({
   children: link.evolves_to.map(mapEvolutionLink),
 });
 
-export const fetchEvolutionChain = async (pokemonId: number): Promise<EvolutionNode> => {
-  const speciesResponse = await fetch(`${POKEAPI_BASE_URL}/pokemon-species/${pokemonId}`);
-
-  if (!speciesResponse.ok) {
-    throw new Error(`Failed to fetch Pokemon species ${pokemonId}: ${speciesResponse.status}`);
-  }
-
-  const species: PokeApiSpeciesResponse = await speciesResponse.json();
-  const chainId = parseIdFromUrl(species.evolution_chain.url);
-
+export const fetchEvolutionChainById = async (chainId: number): Promise<EvolutionNode> => {
   const chainResponse = await fetch(`${POKEAPI_BASE_URL}/evolution-chain/${chainId}`);
 
   if (!chainResponse.ok) {

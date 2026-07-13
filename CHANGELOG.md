@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-07-13
+
+### Added
+
+- Pokémon detail page redesigned as a swipeable, infinite carousel of 6 tabs with dot indicators: About (genus, Pokédex flavor text, color/shape/habitat, Legendary/Mythical/Baby traits, capture rate, growth rate, gender split), Stats (base stats + base experience), Abilities (real effect text per ability, Hidden badge), Moves (grouped by learn method, tap through to its Moves page), Evolution (unchanged, relocated), and Field Data (Held Items and real "Where to Find" locations, tapping through to the Items and Location-Area pages already built). ([#12](https://github.com/AsphaltShark14/pokedex-app/pull/12))
+- The Compare toggle moved into the fixed hero header so it stays visible while swiping between tabs. ([#12](https://github.com/AsphaltShark14/pokedex-app/pull/12))
+
 ## [1.7.0] - 2026-07-11
 
 ### Added
