@@ -9,7 +9,8 @@ const AppTabs = () => {
 
   return (
     <NativeTabs
-      backgroundColor={colors.background}
+      backgroundColor={PokedexBrand.cream}
+      blurEffect="systemUltraThinMaterialLight"
       indicatorColor={colors.backgroundElement}
       tintColor={PokedexBrand.red}
       labelStyle={{ selected: { color: PokedexBrand.red } }}
