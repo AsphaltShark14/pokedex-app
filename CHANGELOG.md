@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The Home/Search tab bar now stays visible on every screen — Pokémon detail, category lists, everything — instead of only on the two tab roots; each tab keeps its own independent navigation history. ([#13](https://github.com/AsphaltShark14/pokedex-app/pull/13))
+
 ## [1.9.0] - 2026-07-13
 
 ### Added
