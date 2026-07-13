@@ -82,21 +82,36 @@ const DetailsScreen = () => {
   }
 
   const pages = [
-    { key: 'about', content: <AboutTab pokemonId={pokemonId} heroColor={heroColor} /> },
+    {
+      key: 'about',
+      title: 'About',
+      content: <AboutTab pokemonId={pokemonId} heroColor={heroColor} />,
+    },
     {
       key: 'stats',
+      title: 'Base Stats',
       content: (
         <StatsTab stats={data.stats} baseExperience={data.baseExperience} heroColor={heroColor} />
       ),
     },
     {
       key: 'abilities',
+      title: 'Abilities',
       content: <AbilitiesTab abilities={data.abilities} heroColor={heroColor} />,
     },
-    { key: 'moves', content: <MovesTab moves={data.moves} heroColor={heroColor} /> },
-    { key: 'evolution', content: <EvolutionTab pokemonId={pokemonId} heroColor={heroColor} /> },
+    {
+      key: 'moves',
+      title: 'Moves',
+      content: <MovesTab moves={data.moves} heroColor={heroColor} />,
+    },
+    {
+      key: 'evolution',
+      title: 'Evolution',
+      content: <EvolutionTab pokemonId={pokemonId} heroColor={heroColor} />,
+    },
     {
       key: 'field-data',
+      title: 'Field Data',
       content: (
         <FieldDataTab pokemonId={pokemonId} heldItems={data.heldItems} heroColor={heroColor} />
       ),

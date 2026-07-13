@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react';
 import { useCallback, useRef, useState } from 'react';
 import type { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import { FlatList, View, useWindowDimensions } from 'react-native';
+import { FlatList, Text, View, useWindowDimensions } from 'react-native';
 
 export type TabPage = {
   key: string;
+  title: string;
   content: ReactNode;
 };
 
@@ -42,6 +43,18 @@ export const TabCarousel = ({ pages, accentColor }: TabCarouselProps) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <Text
+        style={{
+          textAlign: 'center',
+          fontSize: 16,
+          fontWeight: 'bold',
+          paddingTop: 14,
+          color: '#222',
+        }}
+      >
+        {pages[activeIndex].title}
+      </Text>
+
       <View
         style={{
           flexDirection: 'row',
