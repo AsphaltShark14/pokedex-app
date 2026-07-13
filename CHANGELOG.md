@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-07-13
+
+### Added
+
+- Global search tab: repurposes the previously-unused "Explore" tab (still the untouched Expo-starter placeholder) into a real cross-category search covering Pokémon, Items, Berries, Locations, Moves, Contests, Encounters, and Games at once, with quick links to every category page before you start typing. ([#13](https://github.com/AsphaltShark14/pokedex-app/pull/13))
+
+### Changed
+
+- Tab bar restyled to match the rest of the app: the active tab's icon and label now tint red like the header, and both tabs use real SF Symbol/Material icons (house, magnifying glass) instead of custom PNG assets. ([#13](https://github.com/AsphaltShark14/pokedex-app/pull/13))
+
 ## [1.8.0] - 2026-07-13
 
 ### Added
