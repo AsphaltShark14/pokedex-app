@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { Pressable, ScrollView, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
 import type { PokeResourceItem } from '@/api/poke-resource';
@@ -14,6 +14,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 const DEBOUNCE_MS = 300;
 const THUMBNAIL_SIZE = 40;
+const TAB_BAR_CLEARANCE = 80;
 
 const CATEGORY_IMAGE_RESOLVERS: Record<string, (item: PokeResourceItem) => string> = {
   Pokémon: (item) => getPokemonArtworkUrl(item.id),
@@ -27,10 +28,11 @@ const SearchScreen = () => {
   const debouncedQuery = useDebouncedValue(query, DEBOUNCE_MS);
   const categories = useGlobalSearch(debouncedQuery);
   const hasQuery = debouncedQuery.trim().length > 0;
+  const { bottom } = useSafeAreaInsets();
 
   return (
     <YStack flex={1} bg={PokedexBrand.cream}>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
         <XStack bg="white" rounded="$10" px="$4" py="$2" items="center" gap="$2" m="$3">
           <SymbolView
             name={{ ios: 'magnifyingglass', android: 'search', web: 'search' }}
@@ -49,7 +51,13 @@ const SearchScreen = () => {
         </XStack>
 
         {!hasQuery ? (
-          <ScrollView contentContainerStyle={{ padding: 24, gap: 8 }}>
+          <ScrollView
+            contentContainerStyle={{
+              padding: 24,
+              paddingBottom: bottom + TAB_BAR_CLEARANCE,
+              gap: 8,
+            }}
+          >
             <Text fontSize={13} color="#666" pb="$2">
               Browse a category
             </Text>
@@ -84,7 +92,13 @@ const SearchScreen = () => {
             <Paragraph color="#666">No results for &quot;{debouncedQuery}&quot;</Paragraph>
           </YStack>
         ) : (
-          <ScrollView contentContainerStyle={{ padding: 24, gap: 8 }}>
+          <ScrollView
+            contentContainerStyle={{
+              padding: 24,
+              paddingBottom: bottom + TAB_BAR_CLEARANCE,
+              gap: 8,
+            }}
+          >
             {categories.map((category) => {
               const getImageUrl = CATEGORY_IMAGE_RESOLVERS[category.title];
 
