@@ -177,13 +177,13 @@ const LocationsSectionRow = () => {
 const TAB_BAR_CLEARANCE = 80;
 
 const HomeScreen = () => {
-  const { bottom } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
 
   return (
     <YStack flex={1} bg={PokedexBrand.cream}>
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
         <ScrollView contentContainerStyle={{ paddingBottom: bottom + TAB_BAR_CLEARANCE }}>
-          <YStack bg={PokedexBrand.red} p="$4" items="center">
+          <YStack bg={PokedexBrand.red} pt={top + 16} pb="$4" px="$4" items="center">
             <Text style={{ fontFamily: 'PressStart2P_400Regular' }} color="white" fontSize={18}>
               Pokédex
             </Text>
