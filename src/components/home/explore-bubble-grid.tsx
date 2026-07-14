@@ -10,12 +10,7 @@ const BUBBLE_SIZE = 64;
 const COLUMN_OFFSET = BUBBLE_SIZE / 2 + 6;
 
 type ExploreHref =
-  | '/contests'
-  | '/games'
-  | '/encounters'
-  | '/explore/machine'
-  | '/moves'
-  | '/explore/evolution-chain';
+  '/contests' | '/games' | '/encounters' | '/explore/machine' | '/moves' | '/evolution';
 
 type ExploreCategory = {
   label: string;
@@ -47,7 +42,7 @@ const EXPLORE_CATEGORIES: ExploreCategory[] = [
   { label: 'Moves', href: '/moves', icon: { ios: 'bolt.fill', android: 'bolt', web: 'bolt' } },
   {
     label: 'Evolution',
-    href: '/explore/evolution-chain',
+    href: '/evolution',
     icon: { ios: 'arrow.triangle.2.circlepath', android: 'autorenew', web: 'autorenew' },
   },
 ];
