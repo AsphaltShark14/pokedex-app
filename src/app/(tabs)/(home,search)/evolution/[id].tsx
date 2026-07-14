@@ -2,7 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { Pressable, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import { useEvolutionChain } from '@/api/use-evolution-chain';
@@ -11,7 +11,7 @@ import { EvolutionConditionSheet } from '@/components/evolution/evolution-condit
 import type { EvolutionConditionSelection } from '@/components/evolution/evolution-tree-diagram';
 import { EvolutionTreeDiagram } from '@/components/evolution/evolution-tree-diagram';
 import { getTypeColor } from '@/constants/pokemon-types';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const EvolutionFamilyScreen = () => {
   const router = useRouter();
@@ -22,6 +22,7 @@ const EvolutionFamilyScreen = () => {
     enabled: Boolean(chain),
   });
   const [selection, setSelection] = useState<EvolutionConditionSelection | null>(null);
+  const { bottom } = useSafeAreaInsets();
 
   if (isLoading) {
     return (
@@ -76,7 +77,9 @@ const EvolutionFamilyScreen = () => {
             borderTopRightRadius: 32,
           }}
         >
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: bottom + TAB_BAR_CLEARANCE }}
+          >
             <EvolutionTreeDiagram
               chain={chain}
               currentId={pokemonId}

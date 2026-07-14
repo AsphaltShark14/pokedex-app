@@ -1,7 +1,9 @@
 import { ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import { usePokemonSpecies } from '@/api/use-pokemon-species';
+import { TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const InfoRow = ({ label, value }: { label: string; value: string }) => (
   <XStack justify="space-between" items="center" py="$2">
@@ -29,6 +31,7 @@ type AboutTabProps = {
 
 export const AboutTab = ({ pokemonId, heroColor }: AboutTabProps) => {
   const { data, isLoading, isError } = usePokemonSpecies(pokemonId);
+  const { bottom } = useSafeAreaInsets();
 
   if (isLoading) {
     return (
@@ -53,7 +56,9 @@ export const AboutTab = ({ pokemonId, heroColor }: AboutTabProps) => {
   ].filter((label): label is string => Boolean(label));
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 24, gap: 4 }}>
+    <ScrollView
+      contentContainerStyle={{ padding: 24, paddingBottom: bottom + TAB_BAR_CLEARANCE, gap: 4 }}
+    >
       {data.genus.length > 0 && (
         <Text fontSize={13} color="#666" pb="$2">
           {data.genus}

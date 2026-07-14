@@ -2,12 +2,12 @@ import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { Pressable, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import { useLocationAreaDetail } from '@/api/use-location-area-detail';
 import { getPokemonArtworkUrl } from '@/constants/sprites';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const POKEMON_CIRCLE_SIZE = 64;
 
@@ -16,6 +16,7 @@ const LocationAreaDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const areaId = Number(id);
   const { data, isLoading, isError } = useLocationAreaDetail(areaId);
+  const { bottom } = useSafeAreaInsets();
 
   if (isLoading) {
     return (
@@ -52,7 +53,9 @@ const LocationAreaDetailScreen = () => {
           </Text>
         </XStack>
 
-        <ScrollView contentContainerStyle={{ padding: 24, gap: 4 }}>
+        <ScrollView
+          contentContainerStyle={{ padding: 24, paddingBottom: bottom + TAB_BAR_CLEARANCE, gap: 4 }}
+        >
           <Pressable onPress={() => router.push(`/locations/${data.location.id}`)}>
             <XStack justify="space-between" items="center" py="$2">
               <Text fontSize={13} color="#666">

@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Pokémon detail page's Evolution tab now links out to the new full Evolution page for that Pokémon's family.
 - Removed the generic "coming soon" Explore placeholder now that both Evolution and Machines have real dedicated pages.
 
+### Fixed
+
+- Scrollable content on every screen (browse lists, detail pages, the Pokémon detail tabs) now leaves enough room at the bottom to clear the floating persistent tab bar instead of the last item or two being covered by it.
+
 ## [1.9.0] - 2026-07-13
 
 ### Added

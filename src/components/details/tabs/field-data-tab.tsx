@@ -1,11 +1,13 @@
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import type { PokemonHeldItem } from '@/api/pokemon';
 import { usePokemonEncounters } from '@/api/use-pokemon-encounters';
 import { getItemSpriteUrl } from '@/constants/sprites';
+import { TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const ITEM_SPRITE_SIZE = 40;
 
@@ -18,6 +20,7 @@ type FieldDataTabProps = {
 export const FieldDataTab = ({ pokemonId, heldItems, heroColor }: FieldDataTabProps) => {
   const router = useRouter();
   const { data: encounters, isLoading } = usePokemonEncounters(pokemonId);
+  const { bottom } = useSafeAreaInsets();
 
   const hasHeldItems = heldItems.length > 0;
   const hasEncounters = (encounters?.length ?? 0) > 0;
@@ -33,7 +36,9 @@ export const FieldDataTab = ({ pokemonId, heldItems, heroColor }: FieldDataTabPr
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 24, gap: 8 }}>
+    <ScrollView
+      contentContainerStyle={{ padding: 24, paddingBottom: bottom + TAB_BAR_CLEARANCE, gap: 8 }}
+    >
       {hasHeldItems && (
         <YStack gap="$2" pb="$4">
           <Text fontSize={13} color="#666">

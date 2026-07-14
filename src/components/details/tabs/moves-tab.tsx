@@ -1,9 +1,11 @@
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { Pressable, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
 import type { PokemonMove } from '@/api/pokemon';
+import { TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const LEVEL_UP_METHOD = 'Level Up';
 
@@ -14,6 +16,7 @@ type MovesTabProps = {
 
 export const MovesTab = ({ moves, heroColor }: MovesTabProps) => {
   const router = useRouter();
+  const { bottom } = useSafeAreaInsets();
 
   const groups = useMemo(() => {
     const byMethod = new Map<string, PokemonMove[]>();
@@ -47,7 +50,9 @@ export const MovesTab = ({ moves, heroColor }: MovesTabProps) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 24, gap: 8 }}>
+    <ScrollView
+      contentContainerStyle={{ padding: 24, paddingBottom: bottom + TAB_BAR_CLEARANCE, gap: 8 }}
+    >
       {groups.map(([method, group]) => (
         <YStack key={method} gap="$2" pb="$3">
           <Text fontSize={13} color="#666">

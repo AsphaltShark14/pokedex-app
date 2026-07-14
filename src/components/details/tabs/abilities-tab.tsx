@@ -1,8 +1,10 @@
 import { ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import type { PokemonAbility } from '@/api/pokemon';
 import { useAbilityDetail } from '@/api/use-ability-detail';
+import { TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const AbilityRow = ({ ability, heroColor }: { ability: PokemonAbility; heroColor: string }) => {
   const { data, isLoading } = useAbilityDetail(ability.id);
@@ -41,6 +43,8 @@ type AbilitiesTabProps = {
 };
 
 export const AbilitiesTab = ({ abilities, heroColor }: AbilitiesTabProps) => {
+  const { bottom } = useSafeAreaInsets();
+
   if (abilities.length === 0) {
     return (
       <YStack flex={1} items="center" justify="center" p="$4">
@@ -50,7 +54,9 @@ export const AbilitiesTab = ({ abilities, heroColor }: AbilitiesTabProps) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 24, gap: 12 }}>
+    <ScrollView
+      contentContainerStyle={{ padding: 24, paddingBottom: bottom + TAB_BAR_CLEARANCE, gap: 12 }}
+    >
       {abilities.map((ability) => (
         <AbilityRow key={ability.id} ability={ability} heroColor={heroColor} />
       ))}

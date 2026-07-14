@@ -3,14 +3,14 @@ import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
 import type { PokeResourceItem } from '@/api/poke-resource';
 import { useResourceSearchIndex } from '@/api/use-resource-search-index';
 import { FeaturedFamiliesGrid } from '@/components/evolution/featured-families-grid';
 import { getPokemonArtworkUrl } from '@/constants/sprites';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 const THUMBNAIL_SIZE = 48;
@@ -40,6 +40,7 @@ const EvolutionLandingScreen = () => {
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, DEBOUNCE_MS);
   const hasQuery = debouncedQuery.trim().length > 0;
+  const { bottom } = useSafeAreaInsets();
 
   const search = useResourceSearchIndex('pokemon', hasQuery);
 
@@ -102,7 +103,11 @@ const EvolutionLandingScreen = () => {
             <FlatList<PokeResourceItem>
               data={results}
               keyExtractor={(item) => String(item.id)}
-              contentContainerStyle={{ padding: 16, gap: 12 }}
+              contentContainerStyle={{
+                padding: 16,
+                paddingBottom: bottom + TAB_BAR_CLEARANCE,
+                gap: 12,
+              }}
               renderItem={({ item }) => (
                 <PokemonSearchRow
                   item={item}

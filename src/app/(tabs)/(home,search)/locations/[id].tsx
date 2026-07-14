@@ -1,11 +1,11 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { Pressable, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import { useLocationDetail } from '@/api/use-location-detail';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const InfoRow = ({
   label,
@@ -44,6 +44,7 @@ const LocationDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const locationId = Number(id);
   const { data, isLoading, isError } = useLocationDetail(locationId);
+  const { bottom } = useSafeAreaInsets();
 
   if (isLoading) {
     return (
@@ -94,7 +95,13 @@ const LocationDetailScreen = () => {
             borderTopRightRadius: 32,
           }}
         >
-          <ScrollView contentContainerStyle={{ padding: 24, gap: 4 }}>
+          <ScrollView
+            contentContainerStyle={{
+              padding: 24,
+              paddingBottom: bottom + TAB_BAR_CLEARANCE,
+              gap: 4,
+            }}
+          >
             <InfoRow
               label="Region"
               value={data.region.name}

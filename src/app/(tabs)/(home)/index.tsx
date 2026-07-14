@@ -13,7 +13,7 @@ import {
   ROW_CARD_WIDTH,
 } from '@/components/home/home-section-row';
 import { getBerrySpriteUrl, getItemSpriteUrl, getPokemonArtworkUrl } from '@/constants/sprites';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const ROW_IMAGE_SIZE = 72;
 
@@ -173,8 +173,6 @@ const LocationsSectionRow = () => {
     />
   );
 };
-
-const TAB_BAR_CLEARANCE = 80;
 
 const HomeScreen = () => {
   const { top, bottom } = useSafeAreaInsets();

@@ -2,13 +2,13 @@ import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
 import type { PokeResourceItem } from '@/api/poke-resource';
 import { useMachinesList } from '@/api/use-machines-list';
 import { formatMachineLabel, isHiddenMachine, isTechnicalMachine } from '@/constants/machines';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 const DEBOUNCE_MS = 300;
@@ -67,6 +67,7 @@ const MachinesScreen = () => {
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, DEBOUNCE_MS);
   const [kindFilter, setKindFilter] = useState<KindFilter>('all');
+  const { bottom } = useSafeAreaInsets();
 
   const { data, isLoading, isError } = useMachinesList();
 
@@ -150,7 +151,11 @@ const MachinesScreen = () => {
           <FlatList<PokeResourceItem>
             data={items}
             keyExtractor={(item) => String(item.id)}
-            contentContainerStyle={{ padding: 16, gap: 12 }}
+            contentContainerStyle={{
+              padding: 16,
+              paddingBottom: bottom + TAB_BAR_CLEARANCE,
+              gap: 12,
+            }}
             renderItem={({ item }) => (
               <MachineListRow item={item} onPress={() => router.push(`/machines/${item.id}`)} />
             )}

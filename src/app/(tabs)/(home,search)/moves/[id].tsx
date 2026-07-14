@@ -2,13 +2,13 @@ import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { Pressable, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import { useMoveDetail } from '@/api/use-move-detail';
 import { getTypeColor } from '@/constants/pokemon-types';
 import { getPokemonArtworkUrl } from '@/constants/sprites';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const POKEMON_CIRCLE_SIZE = 64;
 
@@ -28,6 +28,7 @@ const MoveDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const moveId = Number(id);
   const { data, isLoading, isError } = useMoveDetail(moveId);
+  const { bottom } = useSafeAreaInsets();
 
   if (isLoading) {
     return (
@@ -85,7 +86,13 @@ const MoveDetailScreen = () => {
             borderTopRightRadius: 32,
           }}
         >
-          <ScrollView contentContainerStyle={{ padding: 24, gap: 4 }}>
+          <ScrollView
+            contentContainerStyle={{
+              padding: 24,
+              paddingBottom: bottom + TAB_BAR_CLEARANCE,
+              gap: 4,
+            }}
+          >
             {data.power !== null && <InfoRow label="Power" value={String(data.power)} />}
             {data.pp !== null && <InfoRow label="PP" value={String(data.pp)} />}
             {data.accuracy !== null && <InfoRow label="Accuracy" value={`${data.accuracy}%`} />}
