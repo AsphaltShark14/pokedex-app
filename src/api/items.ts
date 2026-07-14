@@ -7,6 +7,11 @@ export type ItemAttribute = {
   name: string;
 };
 
+export type MachineHistoryEntry = {
+  machineId: number;
+  versionGroupName: string;
+};
+
 export type ItemDetail = {
   id: number;
   name: string;
@@ -17,6 +22,8 @@ export type ItemDetail = {
   category: { id: number; name: string };
   attributes: ItemAttribute[];
   heldByPokemon: PokeResourceItem[];
+  imageUrl: string | null;
+  machineHistory: MachineHistoryEntry[];
 };
 
 type PokeApiItemResponse = {
@@ -29,6 +36,8 @@ type PokeApiItemResponse = {
   attributes: { name: string; url: string }[];
   effect_entries: { effect: string; short_effect: string; language: { name: string } }[];
   held_by_pokemon: { pokemon: { name: string; url: string } }[];
+  sprites: { default: string | null };
+  machines: { machine: { url: string }; version_group: { name: string } }[];
 };
 
 export const fetchItemDetail = async (id: number): Promise<ItemDetail> => {
@@ -65,6 +74,11 @@ export const fetchItemDetail = async (id: number): Promise<ItemDetail> => {
       name: attribute.name,
     })),
     heldByPokemon,
+    imageUrl: data.sprites.default,
+    machineHistory: data.machines.map((entry) => ({
+      machineId: parseIdFromUrl(entry.machine.url),
+      versionGroupName: entry.version_group.name,
+    })),
   };
 };
 

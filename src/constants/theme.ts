@@ -35,6 +35,7 @@ export const PokedexBrand = {
   contestPurple: '#8E5A9E',
   encounterOrange: '#C9822E',
   gameGold: '#9C7A3C',
+  machineSteel: '#5B6B8C',
 } as const;
 
 export const Fonts = Platform.select({

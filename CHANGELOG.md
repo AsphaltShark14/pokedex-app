@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Full Evolution page: search any Pokémon or jump into a featured family (Bulbasaur, Charmander, Squirtle, Pichu, Eevee, Wurmple, Scyther, Applin) to see its entire evolution tree — including branching and multi-stage chains — with every step's real evolution requirement (item, level, time of day, friendship, trade, location, held item, known move, and more) surfaced right on the connecting arrow, plus a detail sheet for the full breakdown and a link into the item's own page where relevant.
+- Full Machines page: browse every TM and HM (with a quick All/TMs/HMs filter and search), then open one to see its real move history across every game it's appeared in — the same TM or HM number can teach a different move from generation to generation, and this page shows the whole progression, not just the current one — plus which Pokémon can currently learn that move.
 
 ### Changed
 
 - The Pokémon detail page's Evolution tab now links out to the new full Evolution page for that Pokémon's family.
+- Removed the generic "coming soon" Explore placeholder now that both Evolution and Machines have real dedicated pages.
 
 ## [1.9.0] - 2026-07-13
 
