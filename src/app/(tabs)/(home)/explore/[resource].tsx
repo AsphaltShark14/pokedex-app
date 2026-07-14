@@ -7,7 +7,6 @@ import { Paragraph, Text, XStack, YStack } from 'tamagui';
 import { PokedexBrand } from '@/constants/theme';
 
 const PLACEHOLDER_TITLES: Record<string, string> = {
-  'evolution-chain': 'Evolution',
   machine: 'Machines',
 };
 

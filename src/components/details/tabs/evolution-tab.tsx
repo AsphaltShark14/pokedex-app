@@ -1,60 +1,12 @@
-import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView } from 'react-native';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import type { EvolutionNode } from '@/api/pokemon';
-import { usePokemonDetail } from '@/api/use-pokemon-detail';
 import { useEvolutionChain } from '@/api/use-evolution-chain';
-import { getTypeColor } from '@/constants/pokemon-types';
+import { EvolutionNodeCircle } from '@/components/evolution/evolution-node-circle';
 import { PokedexBrand } from '@/constants/theme';
-
-const EVOLUTION_CIRCLE_SIZE = 64;
-
-type EvolutionNodeCircleProps = {
-  id: number;
-  name: string;
-  isCurrent: boolean;
-  onPress: () => void;
-};
-
-const EvolutionNodeCircle = ({ id, name, isCurrent, onPress }: EvolutionNodeCircleProps) => {
-  const { data } = usePokemonDetail(id);
-  const borderColor = data ? getTypeColor(data.types[0]) : '#ddd';
-
-  return (
-    <Pressable onPress={onPress} style={{ alignItems: 'center', width: 80 }}>
-      <View
-        style={{
-          width: EVOLUTION_CIRCLE_SIZE,
-          height: EVOLUTION_CIRCLE_SIZE,
-          borderRadius: EVOLUTION_CIRCLE_SIZE / 2,
-          backgroundColor: 'white',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          borderWidth: isCurrent ? 3 : 2,
-          borderColor: isCurrent ? PokedexBrand.red : borderColor,
-        }}
-      >
-        {data?.imageUrl ? (
-          <Image
-            source={{ uri: data.imageUrl }}
-            style={{ width: '100%', height: '100%' }}
-            contentFit="contain"
-            transition={200}
-          />
-        ) : (
-          <Spinner color={PokedexBrand.red} />
-        )}
-      </View>
-      <Text fontSize={11} fontWeight="bold" textTransform="capitalize" numberOfLines={1} mt="$1">
-        {name}
-      </Text>
-    </Pressable>
-  );
-};
 
 type EvolutionBranchProps = {
   node: EvolutionNode;
@@ -130,6 +82,18 @@ export const EvolutionTab = ({ pokemonId, heroColor }: EvolutionTabProps) => {
           }
         }}
       />
+      <Pressable onPress={() => router.push(`/evolution/${pokemonId}`)} style={{ marginTop: 24 }}>
+        <XStack items="center" gap="$2">
+          <Text fontWeight="bold" color={PokedexBrand.red}>
+            See Full Evolution Family
+          </Text>
+          <SymbolView
+            name={{ ios: 'arrow.right', android: 'arrow_forward', web: 'arrow_forward' }}
+            tintColor={PokedexBrand.red}
+            size={16}
+          />
+        </XStack>
+      </Pressable>
     </ScrollView>
   );
 };

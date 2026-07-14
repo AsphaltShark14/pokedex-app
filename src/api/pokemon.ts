@@ -101,7 +101,7 @@ const STAT_LABELS: Record<string, string> = {
   speed: 'Speed',
 };
 
-const formatName = (name: string): string =>
+export const formatName = (name: string): string =>
   name
     .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -150,14 +150,65 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
   };
 };
 
+export type EvolutionNamedValue = {
+  name: string;
+  formattedName: string;
+};
+
+export type EvolutionCondition = {
+  trigger: string;
+  item: EvolutionNamedValue | null;
+  heldItem: EvolutionNamedValue | null;
+  knownMove: string | null;
+  knownMoveType: string | null;
+  location: string | null;
+  minLevel: number | null;
+  minHappiness: number | null;
+  minAffection: number | null;
+  minBeauty: number | null;
+  needsOverworldRain: boolean;
+  partySpecies: string | null;
+  partyType: string | null;
+  relativePhysicalStats: number | null;
+  timeOfDay: string | null;
+  tradeSpecies: string | null;
+  turnUpsideDown: boolean;
+  gender: number | null;
+};
+
 export type EvolutionNode = {
   id: number;
   name: string;
+  evolutionDetails: EvolutionCondition[];
   children: EvolutionNode[];
+};
+
+type PokeApiNamedResource = { name: string; url: string };
+
+type PokeApiEvolutionDetail = {
+  item: PokeApiNamedResource | null;
+  trigger: PokeApiNamedResource;
+  gender: number | null;
+  held_item: PokeApiNamedResource | null;
+  known_move: PokeApiNamedResource | null;
+  known_move_type: PokeApiNamedResource | null;
+  location: PokeApiNamedResource | null;
+  min_affection: number | null;
+  min_beauty: number | null;
+  min_happiness: number | null;
+  min_level: number | null;
+  needs_overworld_rain: boolean;
+  party_species: PokeApiNamedResource | null;
+  party_type: PokeApiNamedResource | null;
+  relative_physical_stats: number | null;
+  time_of_day: string;
+  trade_species: PokeApiNamedResource | null;
+  turn_upside_down: boolean;
 };
 
 type PokeApiEvolutionChainLink = {
   species: { name: string; url: string };
+  evolution_details: PokeApiEvolutionDetail[];
   evolves_to: PokeApiEvolutionChainLink[];
 };
 
@@ -165,9 +216,37 @@ type PokeApiEvolutionChainResponse = {
   chain: PokeApiEvolutionChainLink;
 };
 
+const mapNamedValue = (resource: PokeApiNamedResource | null): EvolutionNamedValue | null =>
+  resource ? { name: resource.name, formattedName: formatName(resource.name) } : null;
+
+const mapFormattedName = (resource: PokeApiNamedResource | null): string | null =>
+  resource ? formatName(resource.name) : null;
+
+const mapEvolutionDetail = (detail: PokeApiEvolutionDetail): EvolutionCondition => ({
+  trigger: detail.trigger.name,
+  item: mapNamedValue(detail.item),
+  heldItem: mapNamedValue(detail.held_item),
+  knownMove: mapFormattedName(detail.known_move),
+  knownMoveType: mapFormattedName(detail.known_move_type),
+  location: mapFormattedName(detail.location),
+  minLevel: detail.min_level,
+  minHappiness: detail.min_happiness,
+  minAffection: detail.min_affection,
+  minBeauty: detail.min_beauty,
+  needsOverworldRain: detail.needs_overworld_rain,
+  partySpecies: mapFormattedName(detail.party_species),
+  partyType: mapFormattedName(detail.party_type),
+  relativePhysicalStats: detail.relative_physical_stats,
+  timeOfDay: detail.time_of_day || null,
+  tradeSpecies: mapFormattedName(detail.trade_species),
+  turnUpsideDown: detail.turn_upside_down,
+  gender: detail.gender,
+});
+
 const mapEvolutionLink = (link: PokeApiEvolutionChainLink): EvolutionNode => ({
   id: parseIdFromUrl(link.species.url),
   name: formatName(link.species.name),
+  evolutionDetails: link.evolution_details.map(mapEvolutionDetail),
   children: link.evolves_to.map(mapEvolutionLink),
 });
 

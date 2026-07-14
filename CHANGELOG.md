@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Full Evolution page: search any Pokémon or jump into a featured family (Bulbasaur, Charmander, Squirtle, Pichu, Eevee, Wurmple, Scyther, Applin) to see its entire evolution tree — including branching and multi-stage chains — with every step's real evolution requirement (item, level, time of day, friendship, trade, location, held item, known move, and more) surfaced right on the connecting arrow, plus a detail sheet for the full breakdown and a link into the item's own page where relevant.
+
+### Changed
+
+- The Pokémon detail page's Evolution tab now links out to the new full Evolution page for that Pokémon's family.
+
 ## [1.9.0] - 2026-07-13
 
 ### Added
