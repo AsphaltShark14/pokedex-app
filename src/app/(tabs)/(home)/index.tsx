@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, YStack } from 'tamagui';
 
 import type { PokeResourceItem } from '@/api/poke-resource';
@@ -174,12 +174,16 @@ const LocationsSectionRow = () => {
   );
 };
 
+const TAB_BAR_CLEARANCE = 80;
+
 const HomeScreen = () => {
+  const { top, bottom } = useSafeAreaInsets();
+
   return (
     <YStack flex={1} bg={PokedexBrand.cream}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
-          <YStack bg={PokedexBrand.red} p="$4" items="center">
+      <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
+        <ScrollView contentContainerStyle={{ paddingBottom: bottom + TAB_BAR_CLEARANCE }}>
+          <YStack bg={PokedexBrand.red} pt={top + 16} pb="$4" px="$4" items="center">
             <Text style={{ fontFamily: 'PressStart2P_400Regular' }} color="white" fontSize={18}>
               Pokédex
             </Text>
