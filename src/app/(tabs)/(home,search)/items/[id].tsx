@@ -2,12 +2,12 @@ import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { Pressable, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import { useItemDetail } from '@/api/use-item-detail';
 import { getItemSpriteUrl, getPokemonArtworkUrl } from '@/constants/sprites';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const ITEM_IMAGE_SIZE = 120;
 const POKEMON_CIRCLE_SIZE = 64;
@@ -49,6 +49,7 @@ const ItemDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const itemId = Number(id);
   const { data, isLoading, isError } = useItemDetail(itemId);
+  const { bottom } = useSafeAreaInsets();
 
   if (isLoading) {
     return (
@@ -105,7 +106,13 @@ const ItemDetailScreen = () => {
             borderTopRightRadius: 32,
           }}
         >
-          <ScrollView contentContainerStyle={{ padding: 24, gap: 4 }}>
+          <ScrollView
+            contentContainerStyle={{
+              padding: 24,
+              paddingBottom: bottom + TAB_BAR_CLEARANCE,
+              gap: 4,
+            }}
+          >
             <InfoRow
               label="Category"
               value={data.category.name}

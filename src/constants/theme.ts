@@ -73,5 +73,7 @@ export const Spacing = {
   six: 64,
 } as const;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
 export const MaxContentWidth = 800;
+
+// Extra bottom padding so scrollable content clears the floating persistent tab bar.
+export const TAB_BAR_CLEARANCE = 24;

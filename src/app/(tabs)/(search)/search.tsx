@@ -9,12 +9,11 @@ import { Paragraph, Text, XStack, YStack } from 'tamagui';
 import type { PokeResourceItem } from '@/api/poke-resource';
 import { SEARCH_QUICK_LINKS, useGlobalSearch } from '@/api/use-global-search';
 import { getBerrySpriteUrl, getItemSpriteUrl, getPokemonArtworkUrl } from '@/constants/sprites';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 const DEBOUNCE_MS = 300;
 const THUMBNAIL_SIZE = 40;
-const TAB_BAR_CLEARANCE = 80;
 
 const CATEGORY_IMAGE_RESOLVERS: Record<string, (item: PokeResourceItem) => string> = {
   Pokémon: (item) => getPokemonArtworkUrl(item.id),

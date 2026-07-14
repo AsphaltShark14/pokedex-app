@@ -4,7 +4,7 @@ import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, ScrollView, TextInput } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
 import type { PokeResourceItem } from '@/api/poke-resource';
@@ -12,7 +12,7 @@ import type { BerryCategoryKind } from '@/api/berries';
 import { useBerryCategory, useBerryCategoryList } from '@/api/use-berry-category';
 import { useBrowsableResourceList } from '@/api/use-browsable-resource-list';
 import { getBerrySpriteUrl } from '@/constants/sprites';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 const DEBOUNCE_MS = 300;
@@ -116,6 +116,7 @@ const BerriesScreen = () => {
 
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, DEBOUNCE_MS);
+  const { bottom } = useSafeAreaInsets();
 
   const browsable = useBrowsableResourceList('berry', activeFilter ? '' : debouncedQuery);
   const category = useBerryCategory(activeFilter?.kind ?? 'firmness', activeFilter?.id);
@@ -207,7 +208,11 @@ const BerriesScreen = () => {
             <FlatList<PokeResourceItem>
               data={items}
               keyExtractor={(item) => String(item.id)}
-              contentContainerStyle={{ padding: 16, gap: 12 }}
+              contentContainerStyle={{
+                padding: 16,
+                paddingBottom: bottom + TAB_BAR_CLEARANCE,
+                gap: 12,
+              }}
               renderItem={({ item }) => (
                 <BerryListRow item={item} onPress={() => router.push(`/berries/${item.id}`)} />
               )}

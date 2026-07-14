@@ -3,13 +3,13 @@ import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Text, XStack, YStack } from 'tamagui';
 
 import type { PokeResourceItem } from '@/api/poke-resource';
 import { useBrowsableResourceList } from '@/api/use-browsable-resource-list';
 import { getPokemonArtworkUrl } from '@/constants/sprites';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 const THUMBNAIL_SIZE = 48;
@@ -37,6 +37,7 @@ const PokemonListScreen = () => {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, DEBOUNCE_MS);
+  const { bottom } = useSafeAreaInsets();
 
   const { items, isLoading, isError, hasQuery, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useBrowsableResourceList('pokemon', debouncedQuery);
@@ -90,7 +91,11 @@ const PokemonListScreen = () => {
           <FlatList<PokeResourceItem>
             data={items}
             keyExtractor={(item) => String(item.id)}
-            contentContainerStyle={{ padding: 16, gap: 12 }}
+            contentContainerStyle={{
+              padding: 16,
+              paddingBottom: bottom + TAB_BAR_CLEARANCE,
+              gap: 12,
+            }}
             renderItem={({ item }) => (
               <PokemonListRow item={item} onPress={() => router.push(`/details/${item.id}`)} />
             )}

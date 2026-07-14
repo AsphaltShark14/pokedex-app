@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { Pressable, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import { useItemDetail } from '@/api/use-item-detail';
@@ -10,7 +10,7 @@ import { useMachineMoveHistory } from '@/api/use-machine-move-history';
 import { useMoveDetail } from '@/api/use-move-detail';
 import { formatMachineLabel, HM_BLURB, isHiddenMachine, TM_BLURB } from '@/constants/machines';
 import { getPokemonArtworkUrl } from '@/constants/sprites';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 const ITEM_IMAGE_SIZE = 120;
 const POKEMON_CIRCLE_SIZE = 64;
@@ -31,6 +31,7 @@ const MachineDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const itemId = Number(id);
   const { data, isLoading, isError } = useItemDetail(itemId);
+  const { bottom } = useSafeAreaInsets();
 
   const { groups, isLoading: isHistoryLoading } = useMachineMoveHistory(data?.machineHistory ?? []);
   const latestGroup = groups[groups.length - 1];
@@ -99,7 +100,13 @@ const MachineDetailScreen = () => {
             borderTopRightRadius: 32,
           }}
         >
-          <ScrollView contentContainerStyle={{ padding: 24, gap: 4 }}>
+          <ScrollView
+            contentContainerStyle={{
+              padding: 24,
+              paddingBottom: bottom + TAB_BAR_CLEARANCE,
+              gap: 4,
+            }}
+          >
             <Paragraph fontSize={13} color="#666">
               {isHm ? HM_BLURB : TM_BLURB}
             </Paragraph>

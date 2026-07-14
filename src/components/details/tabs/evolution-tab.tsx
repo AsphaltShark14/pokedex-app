@@ -1,12 +1,13 @@
 import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { Pressable, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Paragraph, Spinner, Text, XStack, YStack } from 'tamagui';
 
 import type { EvolutionNode } from '@/api/pokemon';
 import { useEvolutionChain } from '@/api/use-evolution-chain';
 import { EvolutionNodeCircle } from '@/components/evolution/evolution-node-circle';
-import { PokedexBrand } from '@/constants/theme';
+import { PokedexBrand, TAB_BAR_CLEARANCE } from '@/constants/theme';
 
 type EvolutionBranchProps = {
   node: EvolutionNode;
@@ -54,6 +55,7 @@ type EvolutionTabProps = {
 export const EvolutionTab = ({ pokemonId, heroColor }: EvolutionTabProps) => {
   const router = useRouter();
   const { data: evolutionChain, isLoading } = useEvolutionChain(pokemonId);
+  const { bottom } = useSafeAreaInsets();
 
   if (isLoading) {
     return (
@@ -72,7 +74,13 @@ export const EvolutionTab = ({ pokemonId, heroColor }: EvolutionTabProps) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 24, alignItems: 'center' }}>
+    <ScrollView
+      contentContainerStyle={{
+        padding: 24,
+        paddingBottom: bottom + TAB_BAR_CLEARANCE,
+        alignItems: 'center',
+      }}
+    >
       <EvolutionBranch
         node={evolutionChain}
         currentId={pokemonId}
