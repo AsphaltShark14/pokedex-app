@@ -9,8 +9,7 @@ import { PokedexBrand } from '@/constants/theme';
 const BUBBLE_SIZE = 64;
 const COLUMN_OFFSET = BUBBLE_SIZE / 2 + 6;
 
-type ExploreHref =
-  '/contests' | '/games' | '/encounters' | '/explore/machine' | '/moves' | '/evolution';
+type ExploreHref = '/contests' | '/games' | '/encounters' | '/machines' | '/moves' | '/evolution';
 
 type ExploreCategory = {
   label: string;
@@ -36,7 +35,7 @@ const EXPLORE_CATEGORIES: ExploreCategory[] = [
   },
   {
     label: 'Machines',
-    href: '/explore/machine',
+    href: '/machines',
     icon: { ios: 'gearshape.fill', android: 'settings', web: 'settings' },
   },
   { label: 'Moves', href: '/moves', icon: { ios: 'bolt.fill', android: 'bolt', web: 'bolt' } },
